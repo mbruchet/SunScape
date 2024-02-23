@@ -1,0 +1,24 @@
+﻿@page "/counter"
+@using SunScape.Client.Locales
+@rendermode InteractiveAuto
+@inject IStringLocalizer<CounterResource> Localizer
+
+<PageTitle>
+    @Localizer["PageTitle"]</PageTitle>
+
+<h1>
+    @Localizer["Catchphrase"]</h1>
+
+<p role="status">@Localizer["CurrentCount", @currentCount]</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">
+    @Localizer["ClickMe"]</button>
+
+@code {
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+}

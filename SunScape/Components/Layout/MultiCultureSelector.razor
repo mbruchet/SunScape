@@ -1,0 +1,14 @@
+﻿@using System.Globalization
+@inject NavigationManager Navigation
+
+@if (_cultureList != null)
+{
+    <div>
+        <select @bind="Culture">
+            @foreach (var culture in _cultureList)
+            {
+                <option value="@culture.Name">@culture.DisplayName</option>
+            }
+        </select>
+    </div>
+}

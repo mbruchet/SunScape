@@ -1,0 +1,12 @@
+﻿@page "/"
+@using Microsoft.Extensions.Localization
+@using SunScape.Locales
+@inject IStringLocalizer<AppResource> localizer
+
+<PageTitle>
+    @localizer["HomeTitle"]
+</PageTitle>
+
+<h1>@localizer["HelloWorld"]</h1>
+
+@localizer["WelcomeText"].
