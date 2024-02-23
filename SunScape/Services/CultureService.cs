@@ -1,5 +1,6 @@
 ﻿namespace SunScape.Services;
 
+// TODO 1. Create a culture service to retrieve the list of cultures
 public class CultureService
 {
     public List<string> GetSupportedCultures() => new List<string>

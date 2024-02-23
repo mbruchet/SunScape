@@ -12,28 +12,37 @@ namespace SunScape
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddLocalization();
+
+            // TODO 2. Register a local service to list cultures 
+            builder.Services.AddSingleton<CultureService>();
+
+            /// TODO 3. Add Localization middleware with folder path
+            builder.Services.AddLocalization(options=>options.ResourcesPath = "Locales");
 
             // Add services to the container.
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents()
                 .AddInteractiveWebAssemblyComponents();
 
-            builder.Services.AddSingleton<CultureService>();
 
             var app = builder.Build();
 
+            // TODO 4. Get culture service instance from DI
             var cultureService = app.Services.GetRequiredService<CultureService>();
 
+            // TODO 5. Get supported cultures
             string[] supportedCultures = cultureService.GetSupportedCultures().ToArray() ;
 
+            // TODO 6. Define supported cultures
             var localizationOptions = new RequestLocalizationOptions()
                 .SetDefaultCulture(supportedCultures[0])
                 .AddSupportedCultures(supportedCultures)
                 .AddSupportedUICultures(supportedCultures);
 
+            // TODO 7. Add on first position cookie detection 
             localizationOptions.RequestCultureProviders.Insert(0, new CookieRequestCultureProvider());
 
+            // TODO 8. Use request localization
             app.UseRequestLocalization(localizationOptions);
 
             // Configure the HTTP request pipeline.

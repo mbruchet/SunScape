@@ -10,6 +10,7 @@ namespace SunScape.Client
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
+            //TODO 9. Register Localization side on client side
             builder.Services.AddLocalization(options => options.ResourcesPath = "Locales");
 
             await builder.Build().RunAsync();
