@@ -59,3 +59,20 @@ To implement localization in your code using our repository, fork or download ou
 #### following the code todo-list
 1. display todolist
 2. view or change code include to adapt to your project 
+
+## Authentication
+This module focuses on implementing server-side authentication using *Microsoft.AspNetCore.Identity.EntityFrameworkCore*. 
+We'll explore creating a login form that utilizes email and password for user authentication. 
+A significant portion will be dedicated to implementing two-factor authentication, enhancing the security of our application.
+
+On the client-side, we'll delve into Microsoft.AspNetCore.Components.WebAssembly.Authentication, discussing how to implement AuthenticationStateProvider and a redirection component for handling unauthenticated users or expired sessions.
+
+Additionally, we'll cover the integration of Single Sign-On (SSO) with social media accounts like Facebook and Google, providing a streamlined login experience.
+
+Finally, an important aspect for enterprises, the integration with Microsoft Identity Platform for authentication using Azure AD, will be discussed, offering a robust solution for managing user identities and permissions.
+
+This README outlines the key components and steps involved in securing your application, providing a solid foundation for both server and client-side authentication strategies.
+
+### implement User Flow with login and Password
+[Read this readme](./README.Authentication.md)
+

@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.34607.79
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SunScape", "SunScape\SunScape.csproj", "{E5CC8678-D88F-4337-9ECB-412D7796FD6E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SunScape", "SunScape\SunScape.csproj", "{E5CC8678-D88F-4337-9ECB-412D7796FD6E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SunScape.Client", "SunScape.Client\SunScape.Client.csproj", "{A3DD8F87-85C7-43BF-AD29-E9DF32BE3015}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SunScape.Client", "SunScape.Client\SunScape.Client.csproj", "{A3DD8F87-85C7-43BF-AD29-E9DF32BE3015}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Éléments de solution", "Éléments de solution", "{80275E4B-C4B5-4D23-BCA1-D80886841A9A}"
 	ProjectSection(SolutionItems) = preProject
