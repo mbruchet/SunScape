@@ -177,6 +177,17 @@ namespace SunScape
                 .AddInteractiveWebAssemblyRenderMode()
                 .AddAdditionalAssemblies(typeof(Client._Imports).Assembly);
 
+            app.Use(async (context, next) =>
+            {
+                await next();
+
+                if (context.Response.StatusCode == 401)
+                {
+                    context.Response.Redirect("/AccessDenied");
+                }
+            });
+
+
             //Map Culture Set and use Minimal API Approach
             app.MapGet("/Culture/Set", (string culture, string redirectUri, HttpContext httpContext) =>
             {
@@ -213,6 +224,7 @@ namespace SunScape
             app.MapAdditionalIdentityEndpoints();
 
             app.UseAntiforgery();
+
             app.Run();
         }
     }
