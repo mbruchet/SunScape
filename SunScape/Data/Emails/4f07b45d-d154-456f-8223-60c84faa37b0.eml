@@ -1,0 +1,17 @@
+X-Sender: your-email@example.com
+X-Receiver: admin@example.com
+MIME-Version: 1.0
+From: your-email@example.com
+To: admin@example.com
+Date: 27 Feb 2024 15:52:45 +0100
+Subject: Reset your password
+Content-Type: text/html; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+
+Please reset your password by <a href=3D'https://localhost:7139/A=
+ccount/ResetPassword?code=3DQ2ZESjhKcXE1VzJYbnd4UGcxYTJlTTMrc3hlU=
+2hVWXlLSHNicEdMOW5QTEFBY0h1NVRxQkpudlo2ZjNQaGE4MFlyN2svY1FGZWJmM1=
+ljWk4zT01Dd1JFdmZQRzliN1Y4Qys0c05ML0M1N0tzb2UydVNCMlk0Y3RwNno1Y1N=
+XVndLaGk4ZE42QkxVVVRCOWlOL3pYUG90dUFLck9kLzZZbk9zdnUzY1pOTEVTdzJt=
+S29UTHJxcEF0U1FINUE0aG9RQWdlL0huUEtGSHA3bTRDbVJ0WEtoK2k4TGprdEw5a=
+3RGd1gyY1FZRm5XSXRzcmUx'>clicking here</a>.
