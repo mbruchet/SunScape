@@ -19,11 +19,11 @@ namespace SunScape.Identity
 
             var accountGroup = endpoints.MapGroup("/Account");
 
-            accountGroup.MapPost("/PerformExternalLogin", (
+            accountGroup.MapGet("/PerformExternalLogin", (
                 HttpContext context,
                 [FromServices] SignInManager<ApplicationUser> signInManager,
-                [FromForm] string provider,
-                [FromForm] string returnUrl) =>
+                [FromQuery] string provider,
+                [FromQuery] string returnUrl) =>
             {
                 IEnumerable<KeyValuePair<string, StringValues>> query = [
                     new("ReturnUrl", returnUrl),
@@ -49,10 +49,10 @@ namespace SunScape.Identity
 
             var manageGroup = accountGroup.MapGroup("/Manage").RequireAuthorization();
 
-            manageGroup.MapPost("/LinkExternalLogin", async (
+            manageGroup.MapGet("/LinkExternalLogin", async (
                 HttpContext context,
                 [FromServices] SignInManager<ApplicationUser> signInManager,
-                [FromForm] string provider) =>
+                [FromQuery] string provider) =>
             {
                 // Clear the existing external cookie to ensure a clean login process
                 await context.SignOutAsync(IdentityConstants.ExternalScheme);

@@ -15,9 +15,6 @@
 <StatusMessage Message="@message"/>
 <div class="row">
     <div class="col-md-6">
-        <form @onsubmit="OnSendEmailVerificationAsync" @formname="send-verification" id="send-verification-form" method="post">
-            <AntiforgeryToken />
-        </form>
         <EditForm Model="Input" FormName="change-email" OnValidSubmit="OnValidSubmitAsync" method="post">
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" role="alert" />
@@ -36,7 +33,7 @@
                 <div class="form-floating mb-3">
                     <input type="text" value="@email" class="form-control" placeholder="Please enter your email." disabled />
                     <label for="email" class="form-label">Email</label>
-                    <button type="submit" class="btn btn-link" form="send-verification-form">Send verification email</button>
+                    <button type="button" class="btn btn-link" formnovalidate @onclick="OnSendEmailVerificationAsync">Send verification email</button>
                 </div>
             }
             <div class="form-floating mb-3">
@@ -92,11 +89,6 @@
 
     private async Task OnSendEmailVerificationAsync()
     {
-        if (email is null)
-        {
-            return;
-        }
-
         var userId = await UserManager.GetUserIdAsync(user);
         var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));

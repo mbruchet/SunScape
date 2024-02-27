@@ -12,7 +12,7 @@ public class FileEmailService : IEmailSender
     public FileEmailService(IConfiguration configuration)
     {
         _configuration = configuration;
-        _emailFolderPath = _configuration["EmailFolderPath"] ?? "data/emails";
+        _emailFolderPath = new DirectoryInfo(_configuration["EmailFolderPath"] ?? "data/emails").FullName;
 
         if(!Directory.Exists(_emailFolderPath))
             Directory.CreateDirectory(_emailFolderPath);

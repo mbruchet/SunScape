@@ -12,11 +12,11 @@
 <PageTitle>Log in</PageTitle>
 
 <h1>Log in</h1>
-<div class="row">
-    <div class="col-md-4">
-        <section>
-            <StatusMessage Message="@errorMessage" />
-            <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
+<StatusMessage Message="@errorMessage" />
+<EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
+    <div class="row">
+        <div class="col-md-4">
+            <section>
                 <DataAnnotationsValidator />
                 <h2>Use a local account to log in.</h2>
                 <hr />
@@ -51,77 +51,21 @@
                         <a href="Account/ResendEmailConfirmation">Resend email confirmation</a>
                     </p>
                 </div>
-            </EditForm>
-        </section>
+            </section>
+        </div>
+        <div class="col-md-6 col-md-offset-2">
+            @if (externalLogins != null && externalLogins.Any())
+            {
+                <section>
+                    <h3>Use another service to log in.</h3>
+                    <hr />
+
+                    @foreach (var provider in externalLogins)
+                    {
+                        <a href="@($"/Account/PerformExternalLogin?provider={Uri.EscapeDataString(provider.Name)}&returnUrl={Uri.EscapeDataString(ReturnUrl)}")" class="btn"><img src=@provider.IconPath title="@($"log-in with provider {provider.DisplayName}")" style="max-width:33px; max-height:33px" /> @provider.DisplayName</a>
+                    }
+                </section>
+            }
+        </div>
     </div>
-    <div class="col-md-6 col-md-offset-2">
-        <section>
-            <h3>Use another service to log in.</h3>
-            <hr />
-            <ExternalLoginPicker />
-        </section>
-    </div>
-</div>
-
-@code {
-    private string? errorMessage;
-
-    [CascadingParameter]
-    private HttpContext HttpContext { get; set; } = default!;
-
-    [SupplyParameterFromForm]
-    private InputModel Input { get; set; } = new();
-
-    [SupplyParameterFromQuery]
-    private string? ReturnUrl { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        if (HttpMethods.IsGet(HttpContext.Request.Method))
-        {
-            // Clear the existing external cookie to ensure a clean login process
-            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
-        }
-    }
-
-    public async Task LoginUser()
-    {
-        // This doesn't count login failures towards account lockout
-        // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-        var result = await SignInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
-        if (result.Succeeded)
-        {
-            Logger.LogInformation("User logged in.");
-            RedirectManager.RedirectTo(ReturnUrl);
-        }
-        else if (result.RequiresTwoFactor)
-        {
-            RedirectManager.RedirectTo(
-                "Account/LoginWith2fa",
-                new() { ["returnUrl"] = ReturnUrl, ["rememberMe"] = Input.RememberMe });
-        }
-        else if (result.IsLockedOut)
-        {
-            Logger.LogWarning("User account locked out.");
-            RedirectManager.RedirectTo("Account/Lockout");
-        }
-        else
-        {
-            errorMessage = "Error: Invalid login attempt.";
-        }
-    }
-
-    private sealed class InputModel
-    {
-        [Required]
-        [EmailAddress]
-        public string Email { get; set; } = "";
-
-        [Required]
-        [DataType(DataType.Password)]
-        public string Password { get; set; } = "";
-
-        [Display(Name = "Remember me?")]
-        public bool RememberMe { get; set; }
-    }
-}
+</EditForm>

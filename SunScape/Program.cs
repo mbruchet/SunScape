@@ -3,6 +3,7 @@ using Atc.Rest.MinimalApi.Filters.Endpoints;
 using Atc.Rest.MinimalApi.Middleware;
 using Atc.Serialization;
 using FluentValidation;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
@@ -41,7 +42,13 @@ namespace SunScape
             builder.Services.AddScoped<IdentityUserAccessor>();
             builder.Services.AddScoped<IdentityRedirectManager>();
 
-           
+            //TODO SSO 1. Add Google Authentication
+            builder.Services.AddAuthentication().AddGoogle(options =>
+            {
+                options.ClientId = builder.Configuration["Google:client_id"];
+                options.ClientSecret = builder.Configuration["Google:client_secret"];
+            });
+
             builder.Services.AddScoped<AuthenticationStateProvider, PersistingRevalidatingAuthenticationStateProvider>();
 
             ///TODO Identity 5. Add Identity Core with Default Token Provider
@@ -84,6 +91,11 @@ namespace SunScape
                     return Task.CompletedTask;
                 };
             });
+
+            builder.Services.AddAntiforgery();
+
+            builder.Services.AddHttpClient();
+            builder.Services.AddHttpContextAccessor();
 
             var app = builder.Build();
 
@@ -159,7 +171,6 @@ namespace SunScape
             app.UseHttpsRedirection();
 
             app.UseStaticFiles();
-            app.UseAntiforgery();
 
             app.MapRazorComponents<App>()
                 .AddInteractiveServerRenderMode()
@@ -201,6 +212,7 @@ namespace SunScape
             app.MapIdentityApi<ApplicationUser>();
             app.MapAdditionalIdentityEndpoints();
 
+            app.UseAntiforgery();
             app.Run();
         }
     }

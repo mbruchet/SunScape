@@ -10,6 +10,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SunScape.Client\SunScape.Client.csproj" />
     <PackageReference Include="Atc.Rest.MinimalApi" Version="1.0.52" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.2" />
@@ -41,6 +42,10 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>AppResource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\icons\account\" />
   </ItemGroup>
 
 </Project>
