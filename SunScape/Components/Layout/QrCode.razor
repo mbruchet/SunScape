@@ -1,0 +1,26 @@
+﻿@using Microsoft.AspNetCore
+@using System.Drawing;
+@using System.Drawing.Imaging;
+@using Net.Codecrete.QrCodeGenerator
+
+<div class="mb-5" style="width: 300px; height: 300px;">@((MarkupString)QRCodeSvg)</div>
+
+@code {
+    public string QRCodeSvg = "";
+    [Parameter]
+    public string QRCodeText { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        if (!string.IsNullOrEmpty(QRCodeText))
+        {
+            using MemoryStream ms = new();
+
+            var qr = Net.Codecrete.QrCodeGenerator.QrCode.EncodeText(QRCodeText,
+                Net.Codecrete.QrCodeGenerator.QrCode.Ecc.Medium);
+
+            QRCodeSvg = qr.ToSvgString(4);
+            QRCodeSvg = $"<svg viewBox=\"0 0 {qr.Size} {qr.Size}\" xmlns=\"http://www.w3.org/2000/svg\">{QRCodeSvg}</svg>";
+        }
+    }
+}

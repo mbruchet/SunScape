@@ -138,3 +138,20 @@ Ensure your application correctly handles the authentication response from Googl
 This typically involves configuring the external login callback path in your application to process the sign-in response.
 
 By following these steps, you'll have configured Google authentication for your application, allowing users to sign in with their Google accounts seamlessly.
+
+### Authenticate with Two factor
+Two-factor authentication (2FA) with Authenticator application enhances security by requiring two types of identity proofs from the user before granting access to a resource. Here are the key steps and principles:
+
+- Installation and Setup: Users install Authenticator application on their mobile device. When setting up an account for 2FA, the service generates a QR code that the user scans with the app. This process links the user's account to Authenticator application.
+- Code Generation: Authenticator application uses a Time-based One-Time Password (TOTP) algorithm to generate 6 to 8-digit security codes that change every 30 seconds.
+- Authentication: When logging into a service protected by 2FA, the user enters their username and password (first factor) and then the code currently displayed by Authenticator application (second factor). Only the correct combination of both allows access.
+- Enhanced Security: Even if an attacker obtains the password, it's nearly impossible for them to access the account without the second factor generated on the user's device.
+- Backup and Recovery: It's crucial to backup the recovery codes provided during the 2FA setup to avoid losing access to accounts if the mobile device is lost or inoperable.
+
+#### Priority Actions:
+
+1. Activate 2FA with Authenticator application for all critical accounts, especially emails, cloud platforms, and management systems.
+2. Educate teams on the importance of 2FA and security best practices.
+3. Establish access management and recovery protocols to minimize the risks of access loss.
+4. By adopting Authenticator application as a 2FA solution, you add an essential layer of security, thereby protecting sensitive data and critical infrastructures from unauthorized access
+
