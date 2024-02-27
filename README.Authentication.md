@@ -189,3 +189,17 @@ How It Works
 - User Notification: Notify the user via email when their password has been changed, and provide a way to report it if the change was not initiated by them.
 
 Implementing a "Forgot Password" function requires careful consideration of security and usability to ensure that users can easily recover access to their accounts without compromising their security.
+
+## Login with recovery Code
+In a Blazor web application, authentication using recovery codes is an additional security method used in multi-factor authentication (MFA) processes. Here are the key points to consider:
+
+- Principle: Recovery codes are unique, one-time use codes. They are typically generated when setting up two-factor authentication (2FA) for a user account. These codes are intended to be used in case the user loses access to their second factor of authentication (such as a mobile phone).
+- Implementation in Blazor: To implement authentication with a recovery code in a Blazor application, you first need to enable and configure 2FA for your application. This usually involves using an identity framework, like ASP.NET Core Identity, which supports 2FA and the generation of recovery codes.
+- Code Generation: When a user enables 2FA, recovery codes are generated and should be saved by the user. ASP.NET Core Identity can be used to generate these codes when activating 2FA for a user account.
+- Using Codes: If access to the second factor is lost, the user can enter a recovery code during the login attempt to authenticate. Each code can only be used once, thus enhancing security.
+- Secure Storage: It is crucial to store recovery codes securely, as access to them can allow someone to bypass 2FA. Users must keep them in a safe place, separate from their usual authentication devices.
+- Renewal of Codes: After using a recovery code, it is recommended to generate and provide the user with a new set of codes to prevent running out of available codes.
+- Best Practices: Encourage users to regenerate and securely save new recovery codes periodically and whenever they suspect their codes might have been compromised.
+
+In summary, integrating recovery codes into the authentication of a Blazor application adds an important layer of security, allowing users to regain access to their account in case they lose their second factor of authentication. It's essential to implement this feature securely and to educate users on the secure management of their recovery codes.
+
