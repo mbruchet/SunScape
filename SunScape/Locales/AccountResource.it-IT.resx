@@ -1,0 +1,597 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="2fa has been disabled. You can reenable 2fa when you setup an authenticator app" xml:space="preserve">
+    <value>2fa è stato disabilitato. Puoi riattivare 2fa quando configuri un'app di autenticazione</value>
+  </data>
+  <data name="Add a local account so you can log in without an external login." xml:space="preserve">
+    <value>Aggiungi un account locale in modo da poter accedere senza un login esterno.</value>
+  </data>
+  <data name="Add another provider to log in." xml:space="preserve">
+    <value>Aggiungi un altro provider per accedere.</value>
+  </data>
+  <data name="Add authenticator app" xml:space="preserve">
+    <value>Aggiungi l'app di autenticazione</value>
+  </data>
+  <data name="and" xml:space="preserve">
+    <value>E</value>
+  </data>
+  <data name="Associate your {0} account." xml:space="preserve">
+    <value>Associa il tuo account {0}.</value>
+  </data>
+  <data name="Authenticator code" xml:space="preserve">
+    <value>Codice dell'autenticatore</value>
+  </data>
+  <data name="before you can log in with a recovery code." xml:space="preserve">
+    <value>prima di poter accedere con un codice di ripristino.</value>
+  </data>
+  <data name="Change email" xml:space="preserve">
+    <value>Cambia email</value>
+  </data>
+  <data name="Change password" xml:space="preserve">
+    <value>Cambiare la password</value>
+  </data>
+  <data name="Click here to confirm your account" xml:space="preserve">
+    <value>Clicca qui per confermare il tuo account</value>
+  </data>
+  <data name="Configure authenticator app" xml:space="preserve">
+    <value>Configura l'app di autenticazione</value>
+  </data>
+  <data name="Confirm email" xml:space="preserve">
+    <value>Conferma email</value>
+  </data>
+  <data name="Confirm email change" xml:space="preserve">
+    <value>Conferma la modifica dell'e-mail</value>
+  </data>
+  <data name="Confirm Password" xml:space="preserve">
+    <value>Conferma password</value>
+  </data>
+  <data name="Confirmation link to change email sent. Please check your email." xml:space="preserve">
+    <value>Link di conferma per modificare l'email inviata. Si prega di controllare la tua email.</value>
+  </data>
+  <data name="Create a new account." xml:space="preserve">
+    <value>Creare un nuovo account.</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Eliminare</value>
+  </data>
+  <data name="Delete data and close my account" xml:space="preserve">
+    <value>Elimina i dati e chiudi il mio account</value>
+  </data>
+  <data name="Delete Personal Data" xml:space="preserve">
+    <value>Elimina i dati personali</value>
+  </data>
+  <data name="Delete Selected" xml:space="preserve">
+    <value>Elimina selezionato</value>
+  </data>
+  <data name="Deleting this data will permanently remove your account, and this cannot be recovered." xml:space="preserve">
+    <value>L'eliminazione di questi dati rimuoverà definitivamente il tuo account e questo non potrà essere recuperato.</value>
+  </data>
+  <data name="Disable 2FA" xml:space="preserve">
+    <value>Disabilita 2FA</value>
+  </data>
+  <data name="Disable two-factor authentication (2FA)" xml:space="preserve">
+    <value>Disattiva l'autenticazione a due fattori (2FA)</value>
+  </data>
+  <data name="Disabling 2FA does not change the keys used in authenticator apps." xml:space="preserve">
+    <value>La disabilitazione di 2FA non modifica le chiavi utilizzate nelle app di autenticazione.</value>
+  </data>
+  <data name="Don't have access to your authenticator device? You can" xml:space="preserve">
+    <value>Non hai accesso al tuo dispositivo di autenticazione? Puoi</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Scaricamento</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="enable QR code generation" xml:space="preserve">
+    <value>abilitare la generazione del codice QR</value>
+  </data>
+  <data name="Enter the code in the confirmation box below." xml:space="preserve">
+    <value>Inserisci il codice nella casella di conferma qui sotto.</value>
+  </data>
+  <data name="Enter your email." xml:space="preserve">
+    <value>Inserisci il tuo indirizzo email.</value>
+  </data>
+  <data name="Error changing email." xml:space="preserve">
+    <value>Errore durante la modifica dell'e-mail.</value>
+  </data>
+  <data name="Error changing user name." xml:space="preserve">
+    <value>Errore durante la modifica del nome utente.</value>
+  </data>
+  <data name="Error confirming your email" xml:space="preserve">
+    <value>Errore nella conferma della tua email</value>
+  </data>
+  <data name="Error finding user for unspecified email" xml:space="preserve">
+    <value>Errore durante la ricerca dell'utente per un'e-mail non specificata</value>
+  </data>
+  <data name="Error from external provider: {0}" xml:space="preserve">
+    <value>Errore dal fornitore esterno: {0}</value>
+  </data>
+  <data name="Error loading external login information." xml:space="preserve">
+    <value>Errore durante il caricamento delle informazioni di accesso esterne.</value>
+  </data>
+  <data name="Error loading user with ID {0}" xml:space="preserve">
+    <value>Errore durante il caricamento dell'utente con ID {0}</value>
+  </data>
+  <data name="Error: Could not load external login info." xml:space="preserve">
+    <value>Errore: impossibile caricare le informazioni di accesso esterne.</value>
+  </data>
+  <data name="Error: Failed to set phone number." xml:space="preserve">
+    <value>Errore: impossibile impostare il numero di telefono.</value>
+  </data>
+  <data name="Error: Invalid authenticator code." xml:space="preserve">
+    <value>Errore: codice di autenticazione non valido.</value>
+  </data>
+  <data name="Error: Invalid email change confirmation link." xml:space="preserve">
+    <value>Errore: collegamento di conferma della modifica dell'e-mail non valido.</value>
+  </data>
+  <data name="Error: Invalid recovery code entered." xml:space="preserve">
+    <value>Errore: è stato immesso un codice di ripristino non valido.</value>
+  </data>
+  <data name="Error: The external login was not added. External logins can only be associated with one account." xml:space="preserve">
+    <value>Errore: l'accesso esterno non è stato aggiunto. Gli accessi esterni possono essere associati a un solo account.</value>
+  </data>
+  <data name="Error: The external login was not removed." xml:space="preserve">
+    <value>Errore: l'accesso esterno non è stato rimosso.</value>
+  </data>
+  <data name="External Login" xml:space="preserve">
+    <value>Accesso esterno</value>
+  </data>
+  <data name="for" xml:space="preserve">
+    <value>per</value>
+  </data>
+  <data name="Forget this browser" xml:space="preserve">
+    <value>Dimentica questo browser</value>
+  </data>
+  <data name="Forgot password confirmation" xml:space="preserve">
+    <value>Conferma password dimenticata</value>
+  </data>
+  <data name="Forgot your password?" xml:space="preserve">
+    <value>Hai dimenticato la password?</value>
+  </data>
+  <data name="generate a new set of recovery codes" xml:space="preserve">
+    <value>generare una nuova serie di codici di ripristino</value>
+  </data>
+  <data name="Generate Recovery Codes" xml:space="preserve">
+    <value>Genera codici di ripristino</value>
+  </data>
+  <data name="Generate two-factor authentication (2FA) recovery codes" xml:space="preserve">
+    <value>Genera codici di ripristino dell'autenticazione a due fattori (2FA).</value>
+  </data>
+  <data name="Generating new recovery codes does not change the keys used in authenticator apps." xml:space="preserve">
+    <value>La generazione di nuovi codici di ripristino non modifica le chiavi utilizzate nelle app di autenticazione.</value>
+  </data>
+  <data name="If you do not complete your authenticator app configuration you may lose access to your account." xml:space="preserve">
+    <value>Se non completi la configurazione dell'app di autenticazione potresti perdere l'accesso al tuo account.</value>
+  </data>
+  <data name="If you lose your device and don't have the recovery codes you will lose access to your account." xml:space="preserve">
+    <value>Se perdi il tuo dispositivo e non disponi dei codici di ripristino perderai l'accesso al tuo account.</value>
+  </data>
+  <data name="If you reset your authenticator key your authenticator app will not work until you reconfigure it." xml:space="preserve">
+    <value>Se reimposti la chiave di autenticazione, l'app di autenticazione non funzionerà finché non la riconfigurerai.</value>
+  </data>
+  <data name="If you wish to change the key used in an authenticator app you should" xml:space="preserve">
+    <value>Se desideri modificare la chiave utilizzata in un'app di autenticazione, dovresti farlo</value>
+  </data>
+  <data name="into your two factor authenticator app. Spaces and casing do not matter." xml:space="preserve">
+    <value>nella tua app di autenticazione a due fattori. Gli spazi e l'involucro non contano.</value>
+  </data>
+  <data name="Invalid authenticator code entered for user with ID '{0}'." xml:space="preserve">
+    <value>È stato inserito un codice di autenticazione non valido per l'utente con ID '{0}'.</value>
+  </data>
+  <data name="Invalid password reset" xml:space="preserve">
+    <value>Reimpostazione della password non valida</value>
+  </data>
+  <data name="Invalid recovery code entered for user with ID '{0}'!" xml:space="preserve">
+    <value>È stato inserito un codice di ripristino non valido per l'utente con ID '{0}'!</value>
+  </data>
+  <data name="Invalid user" xml:space="preserve">
+    <value>Utente non valido</value>
+  </data>
+  <data name="Learn how to" xml:space="preserve">
+    <value>Impara come</value>
+  </data>
+  <data name="link external login provider {0}" xml:space="preserve">
+    <value>collega il provider di accesso esterno {0}</value>
+  </data>
+  <data name="Locked out" xml:space="preserve">
+    <value>Chiuso fuori</value>
+  </data>
+  <data name="Log in" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="log in with a recovery code" xml:space="preserve">
+    <value>accedi con un codice di ripristino</value>
+  </data>
+  <data name="log-in with provider" xml:space="preserve">
+    <value>accedere con il fornitore</value>
+  </data>
+  <data name="Manage email" xml:space="preserve">
+    <value>Gestisci la posta elettronica</value>
+  </data>
+  <data name="Manage your external logins" xml:space="preserve">
+    <value>Gestisci i tuoi accessi esterni</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="New email" xml:space="preserve">
+    <value>Nuova email</value>
+  </data>
+  <data name="New password" xml:space="preserve">
+    <value>Nuova password</value>
+  </data>
+  <data name="Normally this would be emailed:" xml:space="preserve">
+    <value>Normalmente questo verrebbe inviato via email:</value>
+  </data>
+  <data name="Old password" xml:space="preserve">
+    <value>Vecchia password</value>
+  </data>
+  <data name="Once you have scanned the QR code or input the key above, your two factor authentication app will provide you with a unique code." xml:space="preserve">
+    <value>Dopo aver scansionato il codice QR o inserito la chiave sopra, l'app di autenticazione a due fattori ti fornirà un codice univoco.</value>
+  </data>
+  <data name="or" xml:space="preserve">
+    <value>O</value>
+  </data>
+  <data name="password" xml:space="preserve">
+    <value>parola d'ordine</value>
+  </data>
+  <data name="Please check your email to confirm your account." xml:space="preserve">
+    <value>Controlla la tua email per confermare il tuo account.</value>
+  </data>
+  <data name="Please check your email to reset your password." xml:space="preserve">
+    <value>Controlla la tua email per reimpostare la password.</value>
+  </data>
+  <data name="Please choose your username." xml:space="preserve">
+    <value>Per favore scegli il tuo nome utente.</value>
+  </data>
+  <data name="Please click here to log in!" xml:space="preserve">
+    <value>Clicca qui per accedere!</value>
+  </data>
+  <data name="Please confirm your new password." xml:space="preserve">
+    <value>Per favore conferma la tua nuova password.</value>
+  </data>
+  <data name="Please confirm your password." xml:space="preserve">
+    <value>Per favore conferma la tua password.</value>
+  </data>
+  <data name="Please enter an email address for this site below and click the Register button to finish logging in" xml:space="preserve">
+    <value>Inserisci un indirizzo email per questo sito qui sotto e fai clic sul pulsante Registrati per completare l'accesso</value>
+  </data>
+  <data name="Please enter new email." xml:space="preserve">
+    <value>Inserisci una nuova email.</value>
+  </data>
+  <data name="Please enter the code." xml:space="preserve">
+    <value>Per favore inserisci il codice</value>
+  </data>
+  <data name="Please enter your email." xml:space="preserve">
+    <value>Per favore inserisci la tua email</value>
+  </data>
+  <data name="Please enter your new password." xml:space="preserve">
+    <value>Inserisci la tua nuova password.</value>
+  </data>
+  <data name="Please enter your old password." xml:space="preserve">
+    <value>Inserisci la tua vecchia password.</value>
+  </data>
+  <data name="Please enter your password." xml:space="preserve">
+    <value>Per favore inserisci LA TUA password.</value>
+  </data>
+  <data name="Privacy and cookie policy have not been accepted." xml:space="preserve">
+    <value>La politica sulla privacy e sui cookie non è stata accettata.</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>Profilo</value>
+  </data>
+  <data name="Put these codes in a safe place." xml:space="preserve">
+    <value>Conserva questi codici in un luogo sicuro.</value>
+  </data>
+  <data name="Recovery code verification" xml:space="preserve">
+    <value>Verifica del codice di ripristino</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>Registrati</value>
+  </data>
+  <data name="Register as a new user" xml:space="preserve">
+    <value>Registrati come nuovo utente</value>
+  </data>
+  <data name="Register confirmation" xml:space="preserve">
+    <value>Conferma registrazione</value>
+  </data>
+  <data name="Registered Providers" xml:space="preserve">
+    <value>Fornitori registrati</value>
+  </data>
+  <data name="Remember me" xml:space="preserve">
+    <value>Ricordati di me</value>
+  </data>
+  <data name="Remember this machine" xml:space="preserve">
+    <value>Ricorda questa macchina</value>
+  </data>
+  <data name="Resend" xml:space="preserve">
+    <value>Invia nuovamente</value>
+  </data>
+  <data name="Resend email confirmation" xml:space="preserve">
+    <value>Invia nuovamente l'e-mail di conferma</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Ripristina</value>
+  </data>
+  <data name="Reset authenticator app" xml:space="preserve">
+    <value>Reimposta l'app di autenticazione</value>
+  </data>
+  <data name="Reset authenticator key" xml:space="preserve">
+    <value>Reimposta la chiave di autenticazione</value>
+  </data>
+  <data name="Reset password" xml:space="preserve">
+    <value>Resetta la password</value>
+  </data>
+  <data name="Reset password confirmation" xml:space="preserve">
+    <value>Reimposta la conferma della password</value>
+  </data>
+  <data name="Reset recovery codes" xml:space="preserve">
+    <value>Reimposta i codici di ripristino</value>
+  </data>
+  <data name="reset your authenticator keys." xml:space="preserve">
+    <value>reimpostare le chiavi dell'autenticatore.</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Salva</value>
+  </data>
+  <data name="Scan the QR Code or enter this key" xml:space="preserve">
+    <value>Scansiona il codice QR o inserisci questa chiave</value>
+  </data>
+  <data name="Send verification email" xml:space="preserve">
+    <value>Invia email di verifica</value>
+  </data>
+  <data name="Set up authenticator app" xml:space="preserve">
+    <value>Configura l'app di autenticazione</value>
+  </data>
+  <data name="Set your password" xml:space="preserve">
+    <value>Imposta la tua password</value>
+  </data>
+  <data name="Thank you for confirming your email" xml:space="preserve">
+    <value>Grazie per aver confermato la tua email</value>
+  </data>
+  <data name="Thank you for confirming your email change." xml:space="preserve">
+    <value>Grazie per aver confermato la modifica dell'e-mail.</value>
+  </data>
+  <data name="The current browser has been forgotten. When you login again from this browser you will be prompted for your 2fa code." xml:space="preserve">
+    <value>Il browser corrente è stato dimenticato. Quando accedi nuovamente da questo browser ti verrà richiesto il codice 2fa.</value>
+  </data>
+  <data name="The external login was added." xml:space="preserve">
+    <value>È stato aggiunto l'accesso esterno.</value>
+  </data>
+  <data name="The password reset link is invalid." xml:space="preserve">
+    <value>Il collegamento per la reimpostazione della password non è valido.</value>
+  </data>
+  <data name="This account has been locked out, please try again later." xml:space="preserve">
+    <value>Questo account è stato bloccato, riprova più tardi.</value>
+  </data>
+  <data name="This app does not currently have a real email sender registered" xml:space="preserve">
+    <value>Questa app al momento non ha un vero mittente e-mail registrato, vedi &lt;a href=""https://aka.ms/aspaccountconf""&gt;questi documenti&lt;/a&gt; per come configurare un vero mittente e-mail.</value>
+  </data>
+  <data name="This process disables 2FA until you verify your authenticator app." xml:space="preserve">
+    <value>Questo processo disabilita 2FA finché non verifichi la tua app di autenticazione.</value>
+  </data>
+  <data name="To use an authenticator app go through the following steps:" xml:space="preserve">
+    <value>Per utilizzare un'app di autenticazione, procedi nel seguente modo:</value>
+  </data>
+  <data name="Two-factor authentication" xml:space="preserve">
+    <value>Autenticazione a due fattori</value>
+  </data>
+  <data name="Two-factor authentication (2FA)" xml:space="preserve">
+    <value>Autenticazione a due fattori (2FA)</value>
+  </data>
+  <data name="Unable to find user with Id {0}" xml:space="preserve">
+    <value>Impossibile trovare l'utente con ID {0}</value>
+  </data>
+  <data name="Unable to load two-factor authentication user." xml:space="preserve">
+    <value>Impossibile caricare l'utente con autenticazione a due fattori.</value>
+  </data>
+  <data name="Update password" xml:space="preserve">
+    <value>Aggiorna password</value>
+  </data>
+  <data name="Use a local account to log in." xml:space="preserve">
+    <value>Utilizza un account locale per accedere.</value>
+  </data>
+  <data name="Use another provider to register." xml:space="preserve">
+    <value>Utilizza un altro provider per registrarti.</value>
+  </data>
+  <data name="Use external provider to log in." xml:space="preserve">
+    <value>Utilizza un provider esterno per accedere.</value>
+  </data>
+  <data name="User account locked out." xml:space="preserve">
+    <value>Account utente bloccato.</value>
+  </data>
+  <data name="User with ID '{0}' account locked out." xml:space="preserve">
+    <value>Utente con account ID '{0}' bloccato.</value>
+  </data>
+  <data name="User with ID '{0}' logged in with 2fa." xml:space="preserve">
+    <value>L'utente con ID '{0}' ha effettuato l'accesso con 2fa.</value>
+  </data>
+  <data name="User with ID '{0}' logged in with a recovery code." xml:space="preserve">
+    <value>L'utente con ID '{0}' ha effettuato l'accesso con un codice di ripristino.</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Nome utente</value>
+  </data>
+  <data name="Verification Code" xml:space="preserve">
+    <value>Codice di verifica</value>
+  </data>
+  <data name="Verification email sent. Please check your email." xml:space="preserve">
+    <value>Email di verifica inviata. Si prega di controllare la tua email.</value>
+  </data>
+  <data name="Verify" xml:space="preserve">
+    <value>Verificare</value>
+  </data>
+  <data name="You do not have a local username/password for this site." xml:space="preserve">
+    <value>Non hai un nome utente/password locale per questo sito.</value>
+  </data>
+  <data name="You have 1 recovery code left." xml:space="preserve">
+    <value>Ti è rimasto 1 codice di ripristino.</value>
+  </data>
+  <data name="You have generated new recovery codes." xml:space="preserve">
+    <value>Hai generato nuovi codici di ripristino.</value>
+  </data>
+  <data name="You have no recovery codes left." xml:space="preserve">
+    <value>Non ti sono rimasti codici di recupero.</value>
+  </data>
+  <data name="You have requested to log in with a recovery code. This login will not be remembered until you provide an authenticator app code at log in or disable 2FA and log in again." xml:space="preserve">
+    <value>Hai richiesto di accedere con un codice di ripristino. Questo accesso non verrà ricordato finché non fornirai un codice dell'app di autenticazione al momento dell'accesso o disabiliterai 2FA ed effettuerai nuovamente l'accesso.</value>
+  </data>
+  <data name="You have {0} recovery codes left." xml:space="preserve">
+    <value>Ti restano {0} codici di recupero.</value>
+  </data>
+  <data name="You must accept the policy before you can enable two factor authentication." xml:space="preserve">
+    <value>È necessario accettare la policy prima di poter abilitare l'autenticazione a due fattori.</value>
+  </data>
+  <data name="You've successfully authenticated with" xml:space="preserve">
+    <value>Ti sei autenticato con successo con</value>
+  </data>
+  <data name="Your account contains personal data that you have given us. This page allows you to download or delete that data." xml:space="preserve">
+    <value>Il tuo account contiene i dati personali che ci hai fornito. Questa pagina ti consente di scaricare o eliminare tali dati.</value>
+  </data>
+  <data name="Your authenticator app has been verified." xml:space="preserve">
+    <value>La tua app di autenticazione è stata verificata.</value>
+  </data>
+  <data name="Your authenticator app key has been reset, you will need to configure your authenticator app using the new key." xml:space="preserve">
+    <value>La chiave dell'app di autenticazione è stata reimpostata, dovrai configurare la tua app di autenticazione utilizzando la nuova chiave.</value>
+  </data>
+  <data name="Your email is unchanged." xml:space="preserve">
+    <value>La tua email è rimasta invariata.</value>
+  </data>
+  <data name="Your login is protected with an authenticator app. Enter your authenticator code below" xml:space="preserve">
+    <value>Il tuo accesso è protetto con un'app di autenticazione. Inserisci il tuo codice di autenticazione qui sotto</value>
+  </data>
+  <data name="Your password has been changed" xml:space="preserve">
+    <value>La tua password è stata modificata</value>
+  </data>
+  <data name="Your password has been reset." xml:space="preserve">
+    <value>La tua password è stata resettata.</value>
+  </data>
+  <data name="Your password has been set." xml:space="preserve">
+    <value>La tua password è stata impostata.</value>
+  </data>
+  <data name="Your profile has been updated" xml:space="preserve">
+    <value>Il tuo profilo è stato aggiornato</value>
+  </data>
+  <data name="{Name} logged in with {LoginProvider} provider." xml:space="preserve">
+    <value>{Nome} ha effettuato l'accesso con il provider {LoginProvider}.</value>
+  </data>
+</root>

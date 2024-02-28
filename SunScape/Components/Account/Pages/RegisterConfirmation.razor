@@ -10,22 +10,22 @@
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
 
-<PageTitle>Register confirmation</PageTitle>
+<PageTitle>@Localizer["Register confirmation"]</PageTitle>
 
-<h1>Register confirmation</h1>
+<h1>@Localizer["Register confirmation"]</h1>
 
 <StatusMessage Message="@statusMessage" />
 
 @if (emailConfirmationLink is not null)
 {
     <p>
-        This app does not currently have a real email sender registered, see <a href="https://aka.ms/aspaccountconf">these docs</a> for how to configure a real email sender.
-        Normally this would be emailed: <a href="@emailConfirmationLink">Click here to confirm your account</a>
+        @Localizer[@"This app does not currently have a real email sender registered"]
+        @Localizer["Normally this would be emailed:"] <a href="@emailConfirmationLink">@Localizer["Click here to confirm your account"]</a>
     </p>
 }
 else
 {
-    <p>Please check your email to confirm your account.</p>
+    <p>@Localizer["Please check your email to confirm your account."]</p>
 }
 
 @code {
@@ -52,7 +52,7 @@ else
         if (user is null)
         {
             HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
-            statusMessage = "Error finding user for unspecified email";
+            statusMessage = Localizer["Error finding user for unspecified email"];
         }
         else if (EmailSender is IdentityNoOpEmailSender)
         {

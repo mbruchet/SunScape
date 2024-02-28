@@ -9,16 +9,16 @@
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
 
-<PageTitle>Log in</PageTitle>
+<PageTitle>@Localizer["Log in"]</PageTitle>
 
-<h1>Log in</h1>
+<h1>@Localizer["Log in"]</h1>
 <StatusMessage Message="@errorMessage" />
 <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
     <div class="row">
         <div class="col-md-4">
             <section>
                 <DataAnnotationsValidator />
-                <h2>Use a local account to log in.</h2>
+                <h2>@Localizer["Use a local account to log in."]</h2>
                 <hr />
                 <ValidationSummary class="text-danger" role="alert" />
                 <div class="form-floating mb-3">
@@ -27,28 +27,28 @@
                     <ValidationMessage For="() => Input.Email" class="text-danger" />
                 </div>
                 <div class="form-floating mb-3">
-                    <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
-                    <label for="password" class="form-label">Password</label>
+                    <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="@Localizer["password"]" />
+                    <label for="password" class="form-label">@Localizer["Password"]</label>
                     <ValidationMessage For="() => Input.Password" class="text-danger" />
                 </div>
                 <div class="checkbox mb-3">
                     <label class="form-label">
                         <InputCheckbox @bind-Value="Input.RememberMe" class="darker-border-checkbox form-check-input" />
-                        Remember me
+                        @Localizer["Remember me"]
                     </label>
                 </div>
                 <div>
-                    <button type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
+                    <button type="submit" class="w-100 btn btn-lg btn-primary">@Localizer["Log in"]</button>
                 </div>
                 <div>
                     <p>
-                        <a href="Account/ForgotPassword">Forgot your password?</a>
+                        <a href="Account/ForgotPassword">@Localizer["Forgot your password?"]</a>
                     </p>
                     <p>
-                        <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Register as a new user</a>
+                        <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">@Localizer["Register as a new user"]</a>
                     </p>
                     <p>
-                        <a href="Account/ResendEmailConfirmation">Resend email confirmation</a>
+                        <a href="Account/ResendEmailConfirmation">@Localizer["Resend email confirmation"]</a>
                     </p>
                 </div>
             </section>
@@ -57,12 +57,14 @@
             @if (externalLogins != null && externalLogins.Any())
             {
                 <section>
-                    <h3>Use another service to log in.</h3>
+                    <h3>@Localizer["Use external provider to log in."]</h3>
                     <hr />
 
                     @foreach (var provider in externalLogins)
                     {
-                        <a href="@($"/Account/PerformExternalLogin?provider={Uri.EscapeDataString(provider.Name)}&returnUrl={Uri.EscapeDataString(ReturnUrl)}")" class="btn"><img src=@provider.IconPath title="@($"log-in with provider {provider.DisplayName}")" style="max-width:33px; max-height:33px" /> @provider.DisplayName</a>
+                        <a href="@($"/Account/PerformExternalLogin?provider={Uri.EscapeDataString(provider.Name)}&returnUrl={Uri.EscapeDataString(ReturnUrl)}")" class="btn">
+                            <img src=@provider.IconPath title="@($"{Localizer["log-in with provider", provider.DisplayName]}")" style="max-width:33px; max-height:33px" /> @provider.DisplayName
+                        </a>
                     }
                 </section>
             }

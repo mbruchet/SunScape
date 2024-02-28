@@ -81,7 +81,7 @@ public partial class ExternalLogins
 
         if (!success)
         {
-            RedirectManager.RedirectToCurrentPageWithStatus("Error: The external login was not removed.", HttpContextAcc.HttpContext);
+            RedirectManager.RedirectToCurrentPageWithStatus(Localizer["Error: The external login was not removed."], HttpContextAcc.HttpContext);
         }
         else
         {
@@ -95,18 +95,18 @@ public partial class ExternalLogins
         var info = await SignInManager.GetExternalLoginInfoAsync(userId);
         if (info is null)
         {
-            RedirectManager.RedirectToCurrentPageWithStatus("Error: Could not load external login info.", HttpContextAcc.HttpContext);
+            RedirectManager.RedirectToCurrentPageWithStatus(Localizer["Error: Could not load external login info."], HttpContextAcc.HttpContext);
         }
 
         var result = await UserManager.AddLoginAsync(user, info);
         if (!result.Succeeded)
         {
-            RedirectManager.RedirectToCurrentPageWithStatus("Error: The external login was not added. External logins can only be associated with one account.", HttpContextAcc.HttpContext);
+            RedirectManager.RedirectToCurrentPageWithStatus(Localizer["Error: The external login was not added. External logins can only be associated with one account."], HttpContextAcc.HttpContext);
         }
 
         // Clear the existing external cookie to ensure a clean login process
         await HttpContextAcc.HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
-        RedirectManager.RedirectToCurrentPageWithStatus("The external login was added.", HttpContextAcc.HttpContext);
+        RedirectManager.RedirectToCurrentPageWithStatus(Localizer["The external login was added."], HttpContextAcc.HttpContext);
     }
 }

@@ -66,7 +66,7 @@ namespace SunScape
             builder.Services.AddSingleton<CultureService>();
 
             /// TODO Localization 3. Add Localization middleware with folder path
-            builder.Services.AddLocalization(options=>options.ResourcesPath = "Locales");
+            builder.Services.AddLocalization();
 
             // Add services to the container.
             builder.Services.AddRazorComponents()

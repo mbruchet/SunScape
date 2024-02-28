@@ -12,10 +12,10 @@
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
 
-<PageTitle>Resend email confirmation</PageTitle>
+<PageTitle>@Localizer["Resend email confirmation"]</PageTitle>
 
-<h1>Resend email confirmation</h1>
-<h2>Enter your email.</h2>
+<h1>@Localizer["Resend email confirmation"]</h1>
+<h2>@Localizer["Enter your email."]</h2>
 <hr />
 <StatusMessage Message="@message" />
 <div class="row">
@@ -28,7 +28,7 @@
                 <label for="email" class="form-label">Email</label>
                 <ValidationMessage For="() => Input.Email" class="text-danger" />
             </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Resend</button>
+            <button type="submit" class="w-100 btn btn-lg btn-primary">@Localizer["Resend"]</button>
         </EditForm>
     </div>
 </div>
@@ -44,7 +44,7 @@
         var user = await UserManager.FindByEmailAsync(Input.Email!);
         if (user is null)
         {
-            message = "Verification email sent. Please check your email.";
+            message = Localizer["Verification email sent. Please check your email."];
             return;
         }
 
@@ -56,7 +56,7 @@
             new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code });
         await EmailSender.SendConfirmationLinkAsync(user, Input.Email, HtmlEncoder.Default.Encode(callbackUrl));
 
-        message = "Verification email sent. Please check your email.";
+        message = Localizer["Verification email sent. Please check your email."];
     }
 
     private sealed class InputModel

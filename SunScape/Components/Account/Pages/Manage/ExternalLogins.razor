@@ -14,18 +14,18 @@
 @inject NavigationManager NavigationManager
 
 
-<PageTitle>Manage your external logins</PageTitle>
+<PageTitle>@Localizer["Manage your external logins"]</PageTitle>
 
 <StatusMessage />
 @if (currentLogins?.Count > 0)
 {
     <EditForm Model="@this" OnValidSubmit="@OnSubmit" FormName="ExternalLogins" Enhance method="post">
-        <h3>Registered Logins</h3>
-        <table>
+        <h3>@Localizer["Registered Providers"]</h3>
+        <table class="table table-responsive">
             <thead>
                 <tr>
                     <th>&nbsp;</th>
-                    <th>Name</th>
+                    <th>@Localizer["Name"]</th>
                     <th>Display Name</th>
                     <th>&nbsp;</th>
                 </tr>
@@ -44,7 +44,7 @@
                 }
             </tbody>
         </table>
-        <button type="submit" class="btn btn-danger">Delete Selected</button>
+        <button type="submit" class="btn btn-danger">@Localizer["Delete Selected"]</button>
     </EditForm>
 }
 else
@@ -53,10 +53,12 @@ else
 }
 @if (otherLogins?.Count > 0)
 {
-    <h4>Add another service to log in.</h4>
+    <h4>@Localizer["Add another provider to log in."]</h4>
     <hr />
     @foreach (var provider in externalLogins)
     {
-        <a href="@($"/Account/Manage/LinkExternalLogin?provider={Uri.EscapeDataString(provider.Name)}&returnUrl={Uri.EscapeDataString(ReturnUrl)}")" class="btn"><img src=@provider.IconPath title="@($"link external login provider {provider.DisplayName}")" style="max-width:33px; max-height:33px" /> @provider.DisplayName</a>
+        <a href="@($"/Account/Manage/LinkExternalLogin?provider={Uri.EscapeDataString(provider.Name)}&returnUrl={Uri.EscapeDataString(ReturnUrl)}")" class="btn">
+            <img src=@provider.IconPath title="@(Localizer["link external login provider {0}", provider.DisplayName])" style="max-width:33px; max-height:33px" /> @provider.DisplayName
+        </a>
     }
 }
