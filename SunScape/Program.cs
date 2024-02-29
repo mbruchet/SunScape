@@ -30,11 +30,33 @@ namespace SunScape
 
             builder.Services.ConfigureSwagger();
 
-
             //TODO Identity 3. Register the DbContext
-            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-            builder.Services.AddDbContext<ApplicationIdentityDbContext>(options =>
-                options.UseSqlServer(connectionString));
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+                ?? "Data Source=SunScapeIdentityDb.db";
+
+            var databaseProvider = builder.Configuration["DatabaseProvider"] ?? "SqlLite";
+
+            switch (databaseProvider.ToLower())
+            {
+                case "sqlserver":
+                    {
+                        builder.Services.AddDbContext<ApplicationSqlServerIdentityDbContext>(options =>
+                                   options.UseSqlServer(connectionString));
+                        break;
+                    }
+                case "sqllite":
+                    {
+                        builder.Services.AddDbContext<ApplicationSqlLiteIdentityDbContext>(options =>
+                           options.UseSqlite(connectionString));
+                        break;
+                    }
+                case "inmemory":
+                    builder.Services.AddDbContext<ApplicationSqlServerIdentityDbContext>(options =>
+                                           options.UseInMemoryDatabase("SunScapeIdentityDb"));
+                    break;
+                default:
+                    throw new InvalidOperationException("Database provider not supported.");
+            }
 
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -53,12 +75,22 @@ namespace SunScape
             builder.Services.AddScoped<AuthenticationStateProvider, PersistingRevalidatingAuthenticationStateProvider>();
 
             ///TODO Identity 5. Add Identity Core with Default Token Provider
-            builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationIdentityDbContext>()
-                .AddSignInManager()
-                .AddDefaultTokenProviders();
+            if (databaseProvider.ToLower() == "sqllite")
+            {
+                builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options => options.SignIn.RequireConfirmedAccount = true)
+                    .AddEntityFrameworkStores<ApplicationSqlLiteIdentityDbContext>()
+                    .AddSignInManager()
+                    .AddDefaultTokenProviders();
+            }
+            else
+            {
+                builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options => options.SignIn.RequireConfirmedAccount = true)
+                    .AddEntityFrameworkStores<ApplicationSqlServerIdentityDbContext>()
+                    .AddSignInManager()
+                    .AddDefaultTokenProviders();
+            }
 
-           // builder.Services.AddIdentityApiEndpoints<ApplicationUser>();
+            // builder.Services.AddIdentityApiEndpoints<ApplicationUser>();
 
             //TODO Identity 7. Register Email Sender Service
             builder.Services.RegisterEmailService(builder.Configuration);
@@ -116,9 +148,17 @@ namespace SunScape
             {
                 using var scope = app.Services.CreateScope();
 
-                var context = scope.ServiceProvider.GetRequiredService<ApplicationIdentityDbContext>();
-                context.Database.Migrate();
-                
+                if(databaseProvider.ToLower() == "sqllite")
+                {
+                    var context = scope.ServiceProvider.GetRequiredService<ApplicationSqlLiteIdentityDbContext>();
+                    context.Database.Migrate();
+                }
+                else
+                {
+                    var context = scope.ServiceProvider.GetRequiredService<ApplicationSqlServerIdentityDbContext>();
+                    context.Database.Migrate();
+                }
+
                 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
                 var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
@@ -149,7 +189,7 @@ namespace SunScape
             var cultureService = app.Services.GetRequiredService<CultureService>();
 
             // TODO Localization 5. Get supported cultures
-            string[] supportedCultures = cultureService.GetSupportedCultures().ToArray() ;
+            string[] supportedCultures = cultureService.GetSupportedCultures().ToArray();
 
             // TODO Localization 6. Define supported cultures
             var localizationOptions = new RequestLocalizationOptions()
@@ -205,9 +245,14 @@ namespace SunScape
                     var cookieValue = CookieRequestCultureProvider.MakeCookieValue(requestCulture);
 
                     httpContext.Response.Cookies.Append(cookieName, cookieValue,
-                        new CookieOptions { Path = "/", Expires = DateTimeOffset.Now.AddDays(14),
-                            HttpOnly = true, 
-                            IsEssential = true,  SameSite = SameSiteMode.Lax });
+                        new CookieOptions
+                        {
+                            Path = "/",
+                            Expires = DateTimeOffset.Now.AddDays(14),
+                            HttpOnly = true,
+                            IsEssential = true,
+                            SameSite = SameSiteMode.Lax
+                        });
                 }
 
                 return Results.LocalRedirect(redirectUri);
@@ -215,7 +260,7 @@ namespace SunScape
 
             app.MapGet("/Account/Logout", async (HttpContext httpContext, SignInManager<ApplicationUser> signInManager) =>
             {
-                if(httpContext?.User?.Identity?.IsAuthenticated == true)
+                if (httpContext?.User?.Identity?.IsAuthenticated == true)
                 {
                     await signInManager.SignOutAsync();
                 }

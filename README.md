@@ -60,7 +60,7 @@ To implement localization in your code using our repository, fork or download ou
 1. display todolist
 2. view or change code include to adapt to your project 
 
-## Authentication
+## Implements Authentication
 This module focuses on implementing server-side authentication using *Microsoft.AspNetCore.Identity.EntityFrameworkCore*. 
 We'll explore creating a login form that utilizes email and password for user authentication. 
 A significant portion will be dedicated to implementing two-factor authentication, enhancing the security of our application.
@@ -114,3 +114,30 @@ To implement policy-based authorization in an ASP.NET Core application, follow t
 1. Define Policies: Define custom authorization policies using the AuthorizationOptions service in the ConfigureServices method of the application's Startup class. Policies can be based on a wide range of criteria, including user attributes, resource properties, and external factors.
 2. Define on server side for each page the policy needed to access the page : @attribute [Authorize(Policy = "PolicyName")]
  
+### Deploy on Docker
+Docker is a powerful platform for building, shipping, and running applications in containers. It provides a consistent environment for applications to run across different environments, making it an ideal choice for deploying ASP.NET Core applications.
+
+#### Single-Container vs Multi-Container Deployment
+Single-container deployment involves running an application in a single container, while multi-container deployment involves running an application in multiple interconnected containers. The choice between single-container and multi-container deployment depends on the complexity and scalability requirements of the application.
+The deployment on single-container is the most common and the easiest to implement. The deployment on multi-container is more complex and is used for more complex applications.
+
+- By single container, I mean that the application is deployed in a single container, and the database is deployed in the same on in another container. The two containers are interconnected.
+- By multi-container, I mean that the application is deployed on 2 or more containers, and the database is deployed in another container. The front containers and the database container are interconnected.
+
+#### Deploying an ASP.NET Core Application in a single Docker Container
+To deploy an ASP.NET Core application in a single Docker container, follow these general steps:
+
+1. Migrate your environment to Docker: Ensure that your development environment is set up to work with Docker. This may involve installing Docker Desktop, setting up Docker Compose, and configuring your application to work with Docker.
+2. Migrate your dbcontext to work with Docker: Ensure that your dbcontext is configured to work with Docker. This may involve using a DBMS compatible with Docker and setting up the connection string to work with Docker.
+3. Create a Dockerfile: Create a Dockerfile in the root of the ASP.NET Core application. The Dockerfile contains instructions for building the Docker image, including the base image, application files, and runtime configuration.	
+4. Create a docker-compose.yml file: create a docker-compose.yml file in the root of the ASP.NET Solution
+
+on a single container and if you are using a database on the same container, you can use sqllite. If you are using a database on another container, you can use the following databases:
+- SQL Server
+- MySQL
+- PostgreSQL
+
+##### use env file for secrets.json migration
+- to migrate your secret file on your container you can use a .env file but you should exclude it from your git repository. You can also use the secret manager to store your secret.
+- Because .env file is ascii simple text file you can not include json, so you will need translate your tree in ascii format, you can separate level by __
+

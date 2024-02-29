@@ -10,7 +10,7 @@ using SunScape.Data;
 
 namespace SunScape.Migrations
 {
-    [DbContext(typeof(ApplicationIdentityDbContext))]
+    [DbContext(typeof(ApplicationSqlServerIdentityDbContext))]
     partial class ApplicationIdentityDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
