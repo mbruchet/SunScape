@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 namespace SunScape.Data
 {
     //TODO Identity 2. Create a DbContext
-    public class ApplicationIdentityDbContext(DbContextOptions<ApplicationIdentityDbContext> options) : IdentityDbContext<ApplicationUser>(options)
+    public class ApplicationIdentityDbContext(DbContextOptions<ApplicationIdentityDbContext> options) : IdentityDbContext<ApplicationUser, ApplicationRole, string>(options)
     {
 
         protected override void OnModelCreating(ModelBuilder builder)
