@@ -4,11 +4,17 @@ namespace SunScape.Data;
 
 public class SeedAdminAccount
 {
-    public static async Task SeedAdminUserAsync(UserManager<ApplicationUser> userManager, IConfiguration configuration)
+    public static async Task SeedAdminUserAsync(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IConfiguration configuration)
     {
         var username = configuration["AdminUser:Username"];
         var email = configuration["AdminUser:Email"];
         var password = configuration["AdminUser:Password"];
+        var adminRoleName = configuration["AdminUser:Role"];
+
+        if(!roleManager.Roles.Any())
+        {
+            await roleManager.CreateAsync(new ApplicationRole { Name = adminRoleName });
+        }
 
         if (await userManager.FindByNameAsync(username) == null)
         {
@@ -24,7 +30,7 @@ public class SeedAdminAccount
             if (result.Succeeded)
             {
                 // Optionally assign roles if needed
-                // await userManager.AddToRoleAsync(user, "Admin");
+                await userManager.AddToRoleAsync(user, adminRoleName);
             }
         }
     }

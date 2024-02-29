@@ -91,3 +91,17 @@ ASP.NET Core Identity provides a robust framework for managing user authenticati
 
 #### Conclusion
 ASP.NET Core Identity's approach to personal data management, characterized by the PersonalDataAttribute and the integration of external logins, reflects a comprehensive strategy for privacy and data protection. By providing mechanisms for data export and deletion, along with clear indications of how and where personal data is used, ASP.NET Core Identity helps developers build applications that respect user privacy and comply with data protection regulations like GDPR. This framework empowers users with control over their personal information, fostering trust and security in the digital environment.
+
+## Authorization
+Authorization in ASP.NET Core is a crucial aspect of building secure web applications. It involves defining and enforcing access policies that determine which users are allowed to perform specific actions or access certain resources within the application. ASP.NET Core provides a flexible and extensible authorization system that supports a wide range of scenarios, from simple role-based access control to complex, fine-grained authorization rules.
+
+### Role-Based Authorization
+Role-based authorization is a common approach to managing access control in web applications. It involves associating users with specific roles (e.g., "admin," "manager," "user") and defining access policies based on these roles. ASP.NET Core provides built-in support for role-based authorization, allowing developers to easily define and enforce role-based access policies.
+
+#### Implementing Role-Based Authorization
+To implement role-based authorization in an ASP.NET Core application, follow these general steps:
+
+1. Define Roles: Define the roles that users can be assigned to within the application. This can be done using the RoleManager service provided by ASP.NET Core Identity, or by creating custom role management logic.
+2. Define on server side for each page the role needed to access the page : @attribute [Authorize(Roles = "Admin")]
+3. You can also define a role for a specific zone of the page example: &lt;AuthorizeView Roles="Admin"&gt;
+4. 

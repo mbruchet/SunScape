@@ -52,7 +52,7 @@ namespace SunScape
             builder.Services.AddScoped<AuthenticationStateProvider, PersistingRevalidatingAuthenticationStateProvider>();
 
             ///TODO Identity 5. Add Identity Core with Default Token Provider
-            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+            builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationIdentityDbContext>()
                 .AddSignInManager()
                 .AddDefaultTokenProviders();
@@ -115,9 +115,10 @@ namespace SunScape
                 
                 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
                 var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
 
                 //TODO Identity 10 : Seed Admin account
-                await SeedAdminAccount.SeedAdminUserAsync(userManager, configuration);
+                await SeedAdminAccount.SeedAdminUserAsync(userManager, roleManager, configuration);
             }
             catch (Exception ex)
             {
@@ -183,7 +184,7 @@ namespace SunScape
 
                 if (context.Response.StatusCode == 401)
                 {
-                    context.Response.Redirect("/AccessDenied");
+                    context.Response.Redirect("/Account/AccessDenied");
                 }
             });
 
