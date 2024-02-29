@@ -104,4 +104,13 @@ To implement role-based authorization in an ASP.NET Core application, follow the
 1. Define Roles: Define the roles that users can be assigned to within the application. This can be done using the RoleManager service provided by ASP.NET Core Identity, or by creating custom role management logic.
 2. Define on server side for each page the role needed to access the page : @attribute [Authorize(Roles = "Admin")]
 3. You can also define a role for a specific zone of the page example: &lt;AuthorizeView Roles="Admin"&gt;
-4. 
+
+### Policy-Based Authorization
+Policy-based authorization is a more flexible and granular approach to access control, allowing developers to define custom authorization policies based on a wide range of criteria, including user attributes, resource properties, and external factors. ASP.NET Core provides a powerful policy-based authorization system that enables developers to define and enforce complex access rules.
+
+#### Implementing Policy-Based Authorization
+To implement policy-based authorization in an ASP.NET Core application, follow these general steps:
+
+1. Define Policies: Define custom authorization policies using the AuthorizationOptions service in the ConfigureServices method of the application's Startup class. Policies can be based on a wide range of criteria, including user attributes, resource properties, and external factors.
+2. Define on server side for each page the policy needed to access the page : @attribute [Authorize(Policy = "PolicyName")]
+ 

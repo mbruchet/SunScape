@@ -12,6 +12,7 @@ using SunScape.Api;
 using SunScape.Components;
 using SunScape.Data;
 using SunScape.Identity;
+using SunScape.Identity.Policies;
 using SunScape.Services;
 
 namespace SunScape
@@ -96,6 +97,11 @@ namespace SunScape
 
             builder.Services.AddHttpClient();
             builder.Services.AddHttpContextAccessor();
+
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddIsAdminPolicy();
+            });
 
             var app = builder.Build();
 
