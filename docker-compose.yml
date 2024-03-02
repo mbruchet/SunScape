@@ -1,10 +1,119 @@
-version: '3.4'
+version: "3.9"
 
-services:
-  sunscape:
-    image: ${DOCKER_REGISTRY-}sunscape
-    build:
-      context: .
-      dockerfile: SunScape/Dockerfile
+services: 
+  sunscape-cache:
+     image: redis:alpine
+     container_name: sunscape-cache
+     hostname: sunscape-cache
+     env_file:
+        - .env
+     networks:
+        - sunscapenetwork
+     ports:
+        - "6379:6379"
+
+  mssql:
+    container_name: '${DbServer}'
+    hostname: '${DbServer}'
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+        ACCEPT_EULA: 'Y'
+        SA_PASSWORD: ${DbPassword}
+        MSSQL_DATA_DIR: /var/opt/mssql/data
+        MSSQL_PID: 'Developer' 
+        MSSQL_TCP_PORT: ${DbPort} 
+        MSSQL_DB_NAME: ${DbName}
     env_file:
-      - .env
+        - .env  
+    ports: 
+        - "1433:1433"
+    volumes:
+        - ./data:/var/opt/mssql/data
+        - ./log:/var/opt/mssql/log
+        - ./secrets:/var/opt/mssql/secrets
+    networks:
+        - sunscapenetwork
+
+  web01:
+    image: ${DOCKER_REGISTRY-}sunscape
+    container_name: web01
+    hostname: web01
+    build:
+        context: .
+        dockerfile: SunScape/Dockerfile
+    env_file:
+        - .env
+    environment:
+        - ASPNETCORE_ENVIRONMENT=Docker
+        - DataProtection__Directory=/app/dataprotection
+        - Logging__Path=/app/logs 
+        - Identity__Tokens__PersistKeysToDisk=true
+        - ASPNETCORE_Kestrel__Certificates__Default__Password=Xc9wf8or
+        - ASPNETCORE_Kestrel__Certificates__Default__Path=/certs/app-certificate.pfx
+        - ASPNETCORE_URLS=https://+:8081;http://+:8080
+    networks:
+        - sunscapenetwork
+    depends_on:
+        - sunscape-cache
+        - mssql
+    ports:
+       - "8081:8081"
+       - "8080:8080"
+    volumes:
+        - ./ssl/app-certificate.pfx:/certs/app-certificate.pfx
+        - ./web/dataprotection:/app/dataprotection
+        - ./web/logs:/app/logs 
+
+  web02:
+    image: ${DOCKER_REGISTRY-}sunscape
+    container_name: web02
+    hostname: web02
+    build:
+        context: .
+        dockerfile: SunScape/Dockerfile
+    env_file:
+        - .env
+    environment:
+        - ASPNETCORE_ENVIRONMENT=Docker
+        - DataProtection__Directory=/app/dataprotection
+        - Logging__Path=/app/logs 
+        - Identity__Tokens__PersistKeysToDisk=true
+        - ASPNETCORE_Kestrel__Certificates__Default__Password=Xc9wf8or
+        - ASPNETCORE_Kestrel__Certificates__Default__Path=/certs/app-certificate.pfx
+        - ASPNETCORE_URLS=https://+:8083;http://+:8082
+    networks:
+        - sunscapenetwork
+    depends_on:
+        - sunscape-cache
+        - mssql
+    ports:
+       - "8083:8083"
+       - "8082:8082"
+    volumes:
+        - ./ssl/app-certificate.pfx:/certs/app-certificate.pfx
+        - ./web/dataprotection:/app/dataprotection
+        - ./web/logs:/app/logs 
+
+  nginx:
+    image: nginx:alpine
+    hostname: 'nginx'
+    container_name: 'nginx'
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/proxy.conf:/etc/nginx/proxy.conf:ro
+      - ./nginx/logs/:/var/log/nginx/
+      - ./ssl/certificate.crt:/etc/nginx/certificate.crt:ro
+      - ./ssl/certificate.key:/etc/nginx/certificate.key:ro
+    ports:
+      - '80:80'
+      - '443:443'
+    depends_on:
+      - web01
+    networks:
+      - sunscapenetwork
+    links:
+        - web01
+
+networks:
+    sunscapenetwork:
+        driver: bridge

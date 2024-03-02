@@ -6,6 +6,13 @@ WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
+# Copy wait-for-it.sh
+COPY ["../wait-for-it.sh", "/app/"]
+USER root
+RUN chmod +x /app/wait-for-it.sh
+RUN apt-get update && apt-get install -y curl
+USER app
+
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
