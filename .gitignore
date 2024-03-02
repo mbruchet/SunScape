@@ -363,3 +363,8 @@ MigrationBackup/
 FodyWeavers.xsd
 /SunScape/.env
 /.env
+/data
+/secrets
+/ssl
+/web/dataprotection
+*.sh
