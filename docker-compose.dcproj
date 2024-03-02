@@ -10,11 +10,12 @@
     <DockerServiceName>sunscape</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="nginx\**" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include=".env" />
-    <None Include="docker-compose.override.yml">
-      <DependentUpon>docker-compose.yml</DependentUpon>
-    </None>
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
+    <None Include="wait-for-it.sh" />
   </ItemGroup>
 </Project>

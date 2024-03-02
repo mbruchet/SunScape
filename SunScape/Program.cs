@@ -5,9 +5,13 @@ using Atc.Serialization;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using SunScape.Api;
 using SunScape.Components;
 using SunScape.Data;
@@ -15,13 +19,23 @@ using SunScape.Identity;
 using SunScape.Identity.Policies;
 using SunScape.Services;
 
-namespace SunScape
+namespace SunScape;
+
+public class Program
 {
-    public class Program
+    public static async Task Main(string[] args)
     {
-        public static async Task Main(string[] args)
+        var builder = WebApplication.CreateBuilder(args);
+        var databaseProvider = builder.Configuration["DatabaseProvider"] ?? "SqlLite";
+
+        try
         {
-            var builder = WebApplication.CreateBuilder(args);
+            /************************************************************************************************
+             * 1. Add the required services to the container
+             * 2. Configure the HTTP request pipeline
+             * 3. Seed the database with the admin account
+             * 4. Run the application
+             ************************************************************************************************/
 
             //Add APi
             builder.Services.ConfigureApiVersioning();
@@ -31,28 +45,54 @@ namespace SunScape
             builder.Services.ConfigureSwagger();
 
             //TODO Identity 3. Register the DbContext
-            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+            var connectionString = builder.Configuration.GetConnectionString("IDDatabase")
                 ?? "Data Source=SunScapeIdentityDb.db";
 
-            var databaseProvider = builder.Configuration["DatabaseProvider"] ?? "SqlLite";
+            if (builder.Environment.IsDevelopment() || builder.Environment.IsDocker())
+            {
+                Console.WriteLine($"Db Id ConnectionStrings:{connectionString}");
+            }
 
             switch (databaseProvider.ToLower())
             {
                 case "sqlserver":
                     {
                         builder.Services.AddDbContext<ApplicationSqlServerIdentityDbContext>(options =>
-                                   options.UseSqlServer(connectionString));
+                                   {
+                                       var optSqlBuilder = options.UseSqlServer(connectionString);
+                                       if (builder.Environment.IsDevelopment() || builder.Environment.IsDocker())
+                                       {
+                                           optSqlBuilder.EnableSensitiveDataLogging().EnableDetailedErrors();
+                                       }
+                                   });
+
+                        builder.Services.AddHealthChecks()
+                            .AddDbContextCheck<ApplicationSqlServerIdentityDbContext>();
                         break;
                     }
                 case "sqllite":
                     {
                         builder.Services.AddDbContext<ApplicationSqlLiteIdentityDbContext>(options =>
                            options.UseSqlite(connectionString));
+
+                        builder.Services.AddHealthChecks()
+                            .AddDbContextCheck<ApplicationSqlLiteIdentityDbContext>();
+                        break;
+                    }
+                case "npgsql":
+                    {
+                        builder.Services.AddDbContext<ApplicationNpgsqlIdentityDbContext>(options =>
+                            options.UseNpgsql(connectionString));
+                        builder.Services.AddHealthChecks()
+                            .AddDbContextCheck<ApplicationNpgsqlIdentityDbContext>();
                         break;
                     }
                 case "inmemory":
                     builder.Services.AddDbContext<ApplicationSqlServerIdentityDbContext>(options =>
                                            options.UseInMemoryDatabase("SunScapeIdentityDb"));
+
+                    builder.Services.AddHealthChecks()
+                        .AddDbContextCheck<ApplicationSqlServerIdentityDbContext>();
                     break;
                 default:
                     throw new InvalidOperationException("Database provider not supported.");
@@ -66,28 +106,73 @@ namespace SunScape
             builder.Services.AddScoped<IdentityRedirectManager>();
 
             //TODO SSO 1. Add Google Authentication
-            builder.Services.AddAuthentication().AddGoogle(options =>
+            var googleClientId = builder.Configuration["Google:client_id"];
+
+            if (!string.IsNullOrEmpty(googleClientId))
             {
-                options.ClientId = builder.Configuration["Google:client_id"];
-                options.ClientSecret = builder.Configuration["Google:client_secret"];
-            });
+                builder.Services.AddAuthentication().AddGoogle(options =>
+                {
+                    options.ClientId = googleClientId;
+                    options.ClientSecret = builder.Configuration["Google:client_secret"] ?? string.Empty;
+                });
+            }
 
             builder.Services.AddScoped<AuthenticationStateProvider, PersistingRevalidatingAuthenticationStateProvider>();
 
+            IdentityBuilder identityBuilder;
+
             ///TODO Identity 5. Add Identity Core with Default Token Provider
-            if (databaseProvider.ToLower() == "sqllite")
+            switch (databaseProvider.ToLower())
             {
-                builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options => options.SignIn.RequireConfirmedAccount = true)
-                    .AddEntityFrameworkStores<ApplicationSqlLiteIdentityDbContext>()
-                    .AddSignInManager()
-                    .AddDefaultTokenProviders();
+                case "sqllite":
+                    {
+                        identityBuilder = builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options => options.SignIn.RequireConfirmedAccount = true)
+                            .AddEntityFrameworkStores<ApplicationSqlLiteIdentityDbContext>()
+                            .AddSignInManager()
+                            .AddDefaultTokenProviders();
+                        break;
+                    }
+                case "npgsql":
+                    {
+                        identityBuilder = builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options => options.SignIn.RequireConfirmedAccount = true)
+                            .AddEntityFrameworkStores<ApplicationNpgsqlIdentityDbContext>()
+                            .AddSignInManager()
+                            .AddDefaultTokenProviders();
+                        break;
+                    }
+                default:
+                    {
+                        identityBuilder = builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options => options.SignIn.RequireConfirmedAccount = true)
+                            .AddEntityFrameworkStores<ApplicationSqlServerIdentityDbContext>()
+                            .AddSignInManager()
+                            .AddDefaultTokenProviders();
+
+                        break;
+                    }
+            }
+
+            if (bool.Parse(builder.Configuration["Identity:Tokens:PersistKeysToDisk"] ?? "false"))
+            {
+                string dataDirectoryPath = builder.Configuration["DataProtection:Directory"] ?? string.Empty;
+
+                if (!string.IsNullOrEmpty(dataDirectoryPath))
+                {
+                    identityBuilder.Services.AddDataProtection()
+                        .PersistKeysToFileSystem(new DirectoryInfo(dataDirectoryPath));
+                }
+            }
+
+            // If Environment is Docker, then use Redis Cache
+            if (builder.Environment.IsDocker())
+            {
+                builder.Services.AddStackExchangeRedisCache(options =>
+                {
+                    options.Configuration = builder.Configuration.GetConnectionString("CACHE");
+                });
             }
             else
             {
-                builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options => options.SignIn.RequireConfirmedAccount = true)
-                    .AddEntityFrameworkStores<ApplicationSqlServerIdentityDbContext>()
-                    .AddSignInManager()
-                    .AddDefaultTokenProviders();
+                builder.Services.AddDistributedMemoryCache();
             }
 
             // builder.Services.AddIdentityApiEndpoints<ApplicationUser>();
@@ -135,45 +220,63 @@ namespace SunScape
                 options.AddIsAdminPolicy();
             });
 
+            //Manage Serilog
+            var serilogEnabled = bool.Parse(builder.Configuration["SerilogEnabled"] ?? "false");
+
+            if (serilogEnabled)
+            {
+                // Configuration de Serilog
+                Log.Logger = new LoggerConfiguration()
+                    .ReadFrom.Configuration(builder.Configuration.GetSection("Serilog"))
+                    .CreateLogger();
+
+                builder.Logging.AddSerilog();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine(ex);
+            Environment.Exit(1);
+        }
+
+        try
+        {
             var app = builder.Build();
 
+            //Load css
+            if(!builder.Environment.IsDevelopment())
+                StaticWebAssetsLoader.UseStaticWebAssets(builder.Environment, builder.Configuration); //Add this
+
+            // Call The migration of the identity database
+            using var scope = app.Services.CreateScope();
+
+            /************************************************************************************************
+             * 1. Configure middleware pipeline
+             * 2. configure Swagger
+             * 3. Call Migration
+             * 4. Seed the database with the admin account
+             * 5. Configure Language settings
+             * 6. Configure AccessDenied end point
+             * 7. Set Culture from the URL
+             * 8. Set Logout end point
+             * 9. Use Authentication and Authorization middleware
+            *************************************************************************************************/
             app.UseEndpointDefinitions();
             app.UseMiddleware<GlobalErrorHandlingMiddleware>();
 
             // Use Swagger
             app.ConfigureSwaggerUI(builder.Environment.ApplicationName);
 
-            // TODO Identity 9 : Call The migration of the identity database
-            try
-            {
-                using var scope = app.Services.CreateScope();
 
-                if(databaseProvider.ToLower() == "sqllite")
-                {
-                    var context = scope.ServiceProvider.GetRequiredService<ApplicationSqlLiteIdentityDbContext>();
-                    context.Database.Migrate();
-                }
-                else
-                {
-                    var context = scope.ServiceProvider.GetRequiredService<ApplicationSqlServerIdentityDbContext>();
-                    context.Database.Migrate();
-                }
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
 
-                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-                var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
-                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
-
-                //TODO Identity 10 : Seed Admin account
-                await SeedAdminAccount.SeedAdminUserAsync(userManager, roleManager, configuration);
-            }
-            catch (Exception ex)
-            {
-                // Logique de gestion des exceptions
-                Console.WriteLine(ex.ToString());
-            }
+            //TODO Identity 10 : Seed Admin account
+            await SeedAdminAccount.SeedAdminUserAsync(userManager, roleManager, configuration);
 
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
+            if (app.Environment.IsDevelopment() || app.Environment.IsDocker())
             {
                 app.UseWebAssemblyDebugging();
                 app.UseMigrationsEndPoint();
@@ -204,7 +307,7 @@ namespace SunScape
             app.UseRequestLocalization(localizationOptions);
 
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
+            if (app.Environment.IsDevelopment() ||app.Environment.IsDocker())
             {
                 app.UseWebAssemblyDebugging();
             }
@@ -278,6 +381,11 @@ namespace SunScape
             app.UseAntiforgery();
 
             app.Run();
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine(ex);
+            Environment.Exit(2);
         }
     }
 }

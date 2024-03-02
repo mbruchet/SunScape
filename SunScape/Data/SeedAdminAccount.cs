@@ -6,32 +6,39 @@ public class SeedAdminAccount
 {
     public static async Task SeedAdminUserAsync(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IConfiguration configuration)
     {
-        var username = configuration["AdminUser:Username"];
-        var email = configuration["AdminUser:Email"];
-        var password = configuration["AdminUser:Password"];
-        var adminRoleName = configuration["AdminUser:Role"];
-
-        if(!roleManager.Roles.Any())
+        try
         {
-            await roleManager.CreateAsync(new ApplicationRole { Name = adminRoleName });
-        }
+            var username = configuration["AdminUser:Username"];
+            var email = configuration["AdminUser:Email"];
+            var password = configuration["AdminUser:Password"];
+            var adminRoleName = configuration["AdminUser:Role"];
 
-        if (await userManager.FindByNameAsync(username) == null)
-        {
-            var user = new ApplicationUser
+            if (!roleManager.Roles.Any())
             {
-                UserName = username,
-                Email = email,
-                EmailConfirmed = true
-            };
-
-            var result = await userManager.CreateAsync(user, password);
-
-            if (result.Succeeded)
-            {
-                // Optionally assign roles if needed
-                await userManager.AddToRoleAsync(user, adminRoleName);
+                await roleManager.CreateAsync(new ApplicationRole { Name = adminRoleName });
             }
+
+            if (await userManager.FindByNameAsync(username) == null)
+            {
+                var user = new ApplicationUser
+                {
+                    UserName = username,
+                    Email = email,
+                    EmailConfirmed = true
+                };
+
+                var result = await userManager.CreateAsync(user, password);
+
+                if (result.Succeeded)
+                {
+                    // Optionally assign roles if needed
+                    await userManager.AddToRoleAsync(user, adminRoleName);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
         }
     }
 }
