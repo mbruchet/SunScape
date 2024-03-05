@@ -368,3 +368,4 @@ FodyWeavers.xsd
 /ssl
 /web/dataprotection
 *.sh
+/SunScape/Properties/launchSettings.json
