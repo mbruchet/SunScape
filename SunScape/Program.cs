@@ -2,7 +2,9 @@ using Atc.Rest.MinimalApi.Extensions;
 using Atc.Rest.MinimalApi.Filters.Endpoints;
 using Atc.Rest.MinimalApi.Middleware;
 using Atc.Serialization;
+using Azure.Identity;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.DataProtection;
@@ -11,6 +13,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Identity.Web;
 using Serilog;
 using SunScape.Api;
 using SunScape.Components;
@@ -18,6 +22,13 @@ using SunScape.Data;
 using SunScape.Identity;
 using SunScape.Identity.Policies;
 using SunScape.Services;
+using System.Security.Claims;
+using System.Linq.Dynamic.Core;
+using Microsoft.Identity.Web.UI;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.IdentityModel.Tokens;
 
 namespace SunScape;
 
@@ -30,6 +41,20 @@ public class Program
 
         try
         {
+            /************************************************************************************************
+             * 1. If azure is the environment, then use the azure key vault
+             * **********************************************************************************************/
+            string keyVaultName = builder.Configuration["KeyVaultName"] ?? "";
+
+            if (builder.Environment.IsAzure() && !string.IsNullOrEmpty(keyVaultName))
+            {
+                builder.Configuration.AddAzureKeyVault(new Uri($"https://{keyVaultName}.vault.azure.net/"),
+                    new DefaultAzureCredential(new DefaultAzureCredentialOptions
+                    {
+                        ManagedIdentityClientId = builder.Configuration["AzureAd:ClientId"]
+                    }));
+            }
+
             /************************************************************************************************
              * 1. Add the required services to the container
              * 2. Configure the HTTP request pipeline
@@ -48,7 +73,7 @@ public class Program
             var connectionString = builder.Configuration.GetConnectionString("IDDatabase")
                 ?? "Data Source=SunScapeIdentityDb.db";
 
-            if (builder.Environment.IsDevelopment() || builder.Environment.IsDocker())
+            if (builder.Environment.IsDevelopment() || builder.Environment.IsDocker() || builder.Environment.IsAzure())
             {
                 Console.WriteLine($"Db Id ConnectionStrings:{connectionString}");
             }
@@ -59,8 +84,20 @@ public class Program
                     {
                         builder.Services.AddDbContext<ApplicationSqlServerIdentityDbContext>(options =>
                                    {
+                                       if(builder.Environment.IsAzure())
+                                       {
+                                           options.UseSqlServer(connectionString, sqlServerOptionsAction: sqlOptions =>
+                                           {
+                                               sqlOptions.EnableRetryOnFailure(maxRetryCount: 5, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
+                                           });
+                                       }
+                                       else
+                                       {
+                                           options.UseSqlServer(connectionString);
+                                       }
+
                                        var optSqlBuilder = options.UseSqlServer(connectionString);
-                                       if (builder.Environment.IsDevelopment() || builder.Environment.IsDocker())
+                                       if (builder.Environment.IsDevelopment() || builder.Environment.IsDocker() || builder.Environment.IsAzure())
                                        {
                                            optSqlBuilder.EnableSensitiveDataLogging().EnableDetailedErrors();
                                        }
@@ -106,14 +143,50 @@ public class Program
             builder.Services.AddScoped<IdentityRedirectManager>();
 
             //TODO SSO 1. Add Google Authentication
-            var googleClientId = builder.Configuration["Google:client_id"];
+            var googleClientId = builder.Configuration["Google:CLIENT-ID"];
 
             if (!string.IsNullOrEmpty(googleClientId))
             {
                 builder.Services.AddAuthentication().AddGoogle(options =>
                 {
                     options.ClientId = googleClientId;
-                    options.ClientSecret = builder.Configuration["Google:client_secret"] ?? string.Empty;
+                    options.ClientSecret = builder.Configuration["Google:CLIENT-SECRET"] ?? string.Empty;
+                });
+            }
+
+            if (builder.Environment.IsAzure() && !string.IsNullOrEmpty(builder.Configuration["AzureAd:Instance"] ?? ""))
+            {
+                builder.Services.AddAuthentication(options =>
+                {
+                    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+                })
+                .AddCookie()
+                .AddOpenIdConnect(options =>
+                {
+                    string oidcInstance = builder.Configuration["AzureAd:Instance"]!;
+                    string oidcDomain = builder.Configuration["AzureAd:Domain"]!;
+                    string oidcClientId = builder.Configuration["AZURE_CLIENT_ID"]!;
+                    string oidcTenantId = builder.Configuration["AZURE_TENANT_ID"]!;
+                    string oidcClientSecret = builder.Configuration["AZURE_CLIENT_SECRET"]!;
+
+                    options.Authority = $"https://login.microsoftonline.com/{oidcTenantId}/v2.0/";
+                    options.RequireHttpsMetadata = false;
+                    options.ClientId = oidcClientId;
+                    options.ClientSecret = oidcClientSecret;
+                    options.ResponseType = OpenIdConnectResponseType.CodeIdToken;
+
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        NameClaimType = "name",
+                    };
+
+                    options.GetClaimsFromUserInfoEndpoint = true;
+                    options.MapInboundClaims = false;
+
+                    options.CallbackPath = new PathString("/signin-oidc");
+                    options.SignedOutCallbackPath = new PathString("/signout-callback-oidc");
+                    options.RemoteSignOutPath = new PathString("/signout-oidc");
                 });
             }
 
@@ -163,7 +236,7 @@ public class Program
             }
 
             // If Environment is Docker, then use Redis Cache
-            if (builder.Environment.IsDocker())
+            if (builder.Environment.IsDocker() || builder.Environment.IsAzure())
             {
                 builder.Services.AddStackExchangeRedisCache(options =>
                 {
@@ -192,7 +265,13 @@ public class Program
                 .AddInteractiveWebAssemblyComponents();
 
             // This enables proper enum as string in Swagger UI
-            builder.Services.AddControllers().AddJsonOptions(o => JsonSerializerOptionsFactory.Create());
+            var mvcBuilder = builder.Services.AddControllers().AddJsonOptions(o => JsonSerializerOptionsFactory.Create());
+
+            if (builder.Environment.IsAzure() && !string.IsNullOrEmpty(builder.Configuration["AzureAd:Instance"] ?? ""))
+            {
+                builder.Services.AddRazorPages().AddMicrosoftIdentityUI();
+            }
+
             builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(o => JsonSerializerOptionsFactory.Create());
 
             builder.Services.AddSingleton(_ => new ValidationFilterOptions
@@ -202,7 +281,7 @@ public class Program
 
             builder.Services.ConfigureApplicationCookie(options =>
             {
-                // Configurez le statut de réponse pour les demandes non autorisées
+                // Configurez le statut de rï¿½ponse pour les demandes non autorisï¿½es
                 options.Events.OnRedirectToLogin = context =>
                 {
                     context.Response.StatusCode = StatusCodes.Status401Unauthorized;
@@ -232,6 +311,14 @@ public class Program
 
                 builder.Logging.AddSerilog();
             }
+
+            //Configuring appsettings section AzureAd, into IOptions
+            builder.Services.AddOptions();
+            builder.Services.Configure<OpenIdConnectOptions>(builder.Configuration.GetSection("AzureAd"));
+        }
+        catch (HostAbortedException)
+        {
+            Console.WriteLine("Host Aborted Exception");
         }
         catch (Exception ex)
         {
@@ -244,8 +331,7 @@ public class Program
             var app = builder.Build();
 
             //Load css
-            if(!builder.Environment.IsDevelopment())
-                StaticWebAssetsLoader.UseStaticWebAssets(builder.Environment, builder.Configuration); //Add this
+            StaticWebAssetsLoader.UseStaticWebAssets(builder.Environment, builder.Configuration); //Add this
 
             // Call The migration of the identity database
             using var scope = app.Services.CreateScope();
@@ -276,7 +362,7 @@ public class Program
             await SeedAdminAccount.SeedAdminUserAsync(userManager, roleManager, configuration);
 
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment() || app.Environment.IsDocker())
+            if (app.Environment.IsDevelopment() || app.Environment.IsDocker() || app.Environment.IsAzure())
             {
                 app.UseWebAssemblyDebugging();
                 app.UseMigrationsEndPoint();
@@ -307,7 +393,7 @@ public class Program
             app.UseRequestLocalization(localizationOptions);
 
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment() ||app.Environment.IsDocker())
+            if (app.Environment.IsDevelopment() || app.Environment.IsDocker() || app.Environment.IsAzure())
             {
                 app.UseWebAssemblyDebugging();
             }
@@ -371,7 +457,12 @@ public class Program
                 return Results.LocalRedirect("/");
             });
 
+            // Add the Microsoft Identity Web cookie policy
+            app.UseCookiePolicy();
+
             // TODO Identity 8. Add additional endpoints required by the Identity /Account Razor components.
+            app.UseRouting();
+
             app.UseAuthentication();
             app.UseAuthorization();
 
@@ -379,8 +470,16 @@ public class Program
             app.MapAdditionalIdentityEndpoints();
 
             app.UseAntiforgery();
+            
+            app.MapRazorPages();
+            app.MapControllers();
 
             app.Run();
+        }
+
+        catch (HostAbortedException)
+        {
+            Console.WriteLine("Host Aborted Exception");
         }
         catch (Exception ex)
         {

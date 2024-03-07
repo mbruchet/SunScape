@@ -1,6 +1,6 @@
 ﻿namespace SunScape.Services;
 
-public static class DockerEnvironmentExtension
+public static class MultipleEnvironmentExtension
 {
     public static bool IsDocker(this IHostEnvironment env)
     {
@@ -16,6 +16,18 @@ public static class DockerEnvironmentExtension
         if(!string.IsNullOrEmpty(environmentName))
         {
             return environmentName.Equals("Docker", StringComparison.OrdinalIgnoreCase);
+        }
+
+        return false;
+    }
+
+    public static bool IsAzure(this IHostEnvironment env)
+    {
+        var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+        if(!string.IsNullOrEmpty(environmentName))
+        {
+            return environmentName.Equals("Azure", StringComparison.OrdinalIgnoreCase);
         }
 
         return false;

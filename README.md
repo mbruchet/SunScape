@@ -9,11 +9,21 @@ Blazor Web App 8 introduces several enhancements and new features aimed at impro
 * Improved Development Tools: Enhanced tooling support in Visual Studio and Visual Studio Code for a more efficient development process.
 * Advanced Integration Options: Better integration with modern JavaScript libraries and APIs, allowing for more flexible and powerful web applications.
 
-## Creating a Project
+## Introduction
+
+### Creating a Project
 To create a Blazor Web App in Visual Studio 2022, first ensure you have the latest version of Visual Studio with the ASP.NET and web development workload installed. Then, create a new project and select the "Blazor Web App" template, which supports both interactive server-side rendering (SSR) and client-side rendering (CSR). This template is recommended for learning about Blazor's server-side and client-side features. For more detailed instructions on setting up your project, including choosing render modes and configuring for client or server-side rendering, you might want to consult the official Microsoft documentation
 
-## Rendering Modes
-The Blazor Web App template in Visual Studio 2022 notably includes three rendering modes for applications: Server, WebAssembly (Client), and Automatic. The Server mode executes application logic on the server, utilizing SignalR for dynamic UI updates. The WebAssembly mode allows the application to run directly in the browser, leveraging .NET on WebAssembly for client-side execution. The innovative Automatic mode intelligently combines both, starting with server-side rendering for a quick initial load and transitioning to WebAssembly for rich interactivity, optimizing both performance and the user experience. For more detailed insights, you're encouraged to refer to the official Microsoft documentation on Blazor project templates and rendering modes.
+### Rendering Modes
+The Blazor Web App template in Visual Studio 2022 notably includes three rendering modes for applications: 
+- Server, 
+- WebAssembly (Client), 
+- and Automatic. 
+
+The Server mode executes application logic on the server, utilizing SignalR for dynamic UI updates. 
+The WebAssembly mode allows the application to run directly in the browser, leveraging .NET on WebAssembly for client-side execution. 
+The innovative Automatic mode intelligently combines both, starting with server-side rendering for a quick initial load and transitioning to WebAssembly for rich interactivity, optimizing both performance and the user experience. 
+For more detailed insights, you're encouraged to refer to the official Microsoft documentation on Blazor project templates and rendering modes.
 
 ## Localization in Blazor Applications
 Localization in Blazor applications refers to the process of adapting your application to support multiple languages and cultures. This is crucial for developing global applications that cater to a diverse user base.
@@ -38,10 +48,11 @@ Organizing localization files in a specific folder, separate from the Blazor com
 
 By adopting these practices and leveraging Blazor Web App 8's features, developers can create robust, modern web applications that are accessible to a global audience.
 
-## how to use our template
+### how to use our template
 To implement localization in your code using our repository, fork or download our specific functional branch named feature/localization. Follow the provided to-do list, as each step of the code implementation is detailed there. This structured approach ensures a thorough understanding and integration of localization features into your Blazor application.
 
 ### todo-list
+
 #### server side
 1. create on server side project a folder named Locales
 2. create on the server side project a resource file named AppResource.resx and generate it code
@@ -60,8 +71,15 @@ To implement localization in your code using our repository, fork or download ou
 1. display todolist
 2. view or change code include to adapt to your project 
 
-## Implements Authentication
-This module focuses on implementing server-side authentication using *Microsoft.AspNetCore.Identity.EntityFrameworkCore*. 
+## Authentication
+Asp.net core Identity is a membership system that adds login functionality to your application. It is a part of the Asp.net core framework and is the recommended way to implement authentication in your application. 
+It is a membership system that adds login functionality to your application. 
+It is a part of the Asp.net core framework and is the recommended way to implement authentication in your application.
+
+### Implements Authentication
+This module focuses on implementing server-side authentication using 
+*Microsoft.AspNetCore.Identity.EntityFrameworkCore*. 
+
 We'll explore creating a login form that utilizes email and password for user authentication. 
 A significant portion will be dedicated to implementing two-factor authentication, enhancing the security of our application.
 
@@ -141,7 +159,7 @@ on a single container and if you are using a database on the same container, you
 - to migrate your secret file on your container you can use a .env file but you should exclude it from your git repository. You can also use the secret manager to store your secret.
 - Because .env file is ascii simple text file you can not include json, so you will need translate your tree in ascii format, you can separate level by __
 
-### Deploying an ASP.NET Core Application in a multi Docker Container
+#### Deploying an ASP.NET Core Application in a multi Docker Container
 To deploy an ASP.NET Core application in a multi Docker container, follow these general steps:
 
 #### Architecture for a multi-container deployment
@@ -179,3 +197,107 @@ To deploy an ASP.NET Core application in a multi-container deployment, you will 
 - Apache
 
 In our sample we use Nginx, but it can be easy to change it to another reverse proxy.
+
+### Deploy on Azure
+Azure is a cloud computing platform and infrastructure created by Microsoft. It provides a wide range of cloud services, including virtual machines, databases, storage, and more. Azure is an ideal platform for deploying ASP.NET Core applications, offering scalability, reliability, and security.
+
+#### Strategy deployment on Azure
+Azure provides several options for deploying ASP.NET Core applications, including Azure App Service, Azure Static Web app, Azure Virtual Machines, and Azure Kubernetes Service. 
+The choice of deployment strategy depends on factors such as scalability, performance, and cost.
+
+#### Deploy on Azure Container Instances (AKS, ACI)
+Azure Container Instances (ACI) is a serverless container service that enables developers to deploy containers without managing the underlying infrastructure. It is ideal for running containers on demand, with fast startup times and flexible pricing options. Azure Kubernetes Service (AKS) is a managed Kubernetes service that provides a highly scalable and reliable platform for deploying, managing, and scaling containerized applications using Kubernetes.
+To deploy on AKS and ACI, you will need the same aproach than on Docker Multi-Container Deployment.
+
+##### Secrets
+You can replace .env file by Azure Key Vault to store your secrets.
+
+#### Choose between Azure App Service and Azure Static Web app
+- Azure App Service: Azure App Service is a fully managed platform for building, deploying, and scaling web apps. It provides built-in support for ASP.NET Core applications, with features such as automatic scaling, continuous deployment, and integrated security. You deploy a Blazor Web App on Azure App Service when you will need server rendering.
+- Azure Static Web app: Azure Static Web Apps is a modern web hosting service that enables you to build and deploy static web apps with serverless APIs. It is ideal for hosting client-side Blazor applications, providing a scalable and cost-effective platform for serving static content and API endpoints. In Generaly your API run in Azure Function and you host only your HTML Page on the Server. You can distribute it with CDN.
+
+#### Scope of this repository
+In this repository, we will focus on deploying on Azure App Service. For Azure Static Web app you can referer to the Sunscape-webassembly repository.
+
+#### How to deploy on Azure App Service
+To deploy an ASP.NET Core application on Azure App Service, follow these general steps:
+
+1. Choose the right solution to store your secret
+
+On Azure you can use several solution to store your secret, you can use the following solution:
+	- Azure Key Vault: Safeguard cryptographic keys and other secrets used by cloud apps and services.
+	- Azure App Configuration: Azure App Configuration is a managed service that helps developers centralize their application configurations.
+	- Azure Blob Storage: Azure Blob storage is Microsoft's object storage solution for the cloud.
+
+In our sample we use Azure Key Vault, but it can be easy to change it to another solution.
+After having created your Azure Key Vault or choosing other solution, you will need to store your secret in it. Migrate from the .env file the keys
+
+GOOGLE--CLIENT-SECRET
+GOOGLE--CLIENT-ID
+ADMINUSER--ROLE
+ADMINUSER--PASSWORD
+ADMINUSER--EMAIL
+ADMINUSER--USERNAME
+
+2. Choose best solution for you Database
+
+On azure you can use several database, you can use the following databases:
+	- Azure CosmosDB: A fully managed NoSQL database service for modern app development.
+	- Azure SQL Database: A fully managed relational database service.
+	- Azure Database for MySQL: A fully managed MySQL database service.
+	- Azure Database for PostgreSQL: A fully managed PostgreSQL database service.
+	- Azure Database for MariaDB: A fully managed MariaDB database service.
+	- SQL Server Virtual Machine: A virtual machine running SQL Server.
+
+In our sample we use Azure SQL Database, but it can be easy to change it to another database.
+Don't forget to store your connection string in your secret solution.
+
+For Azure Key Vault , the Key should be CONNECTIONSTRINGS--IDDatabase
+
+Remarks about the SQL Server Migration, it is a good pratice to generate the migration script and to execute it on the database.
+
+3. Choose best solution for you Session State
+
+On azure you can use several session state, you can use the following session state:
+	- Azure Redis Cache: A fully managed in-memory data store service.
+	- Azure Cache for Redis: A fully managed Redis cache service.
+
+In our sample we use Azure Redis Cache, but it can be easy to change it to another session state.
+Don't forget to store your connection string in your secret solution.
+
+For Azure Key Vault , the Key should be CONNECTIONSTRINGS--CACHE
+
+4. Chosse Solution for Data Protection keys storage
+On Azure you can use several solution to store your data protection keys, you can use the following solution:
+	- Azure Blob Storage: Azure Blob storage is Microsoft's object storage solution for the cloud.
+	- Azure File Storage: Azure Files offers fully managed file shares in the cloud.
+	- DbContext: Use Dbcontext to persist the keys.
+
+Remark about the DbContext, 
+In your dbcontext you can add a property to store the keys, you can use the following code:
+```csharp
+public DbSet<DataProtectionKey> DataProtectionKeys { get; set; } = null!;
+```
+This property represents the table in which the keys are stored. Create the table manually or with DbContext Migrations. For more information, see DataProtectionKey.
+
+Remark about the File Storage,
+To store keys on a UNC share instead of at the %LOCALAPPDATA% default location, configure the system with the following code:
+```csharp	
+builder.Services.AddDataProtection()
+    .PersistKeysToFileSystem(new DirectoryInfo(@"\\server\share\directory\"));
+```
+
+In our sample we use Azure Blob Storage.
+To manage keys with Azure Key Vault, we will configure the system with ProtectKeysWithAzureKeyVault in Program.cs. 
+blobUriWithSasToken is the full URI where the key file should be stored. The URI must contain the SAS token as a query string parameter. For more information, see BlobUriWithSasToken.
+
+### Azure AD SSO
+Because we use Azure to deploy application, we can use Azure AD to connect our user. 
+
+To integrate Azure AD with your Blazor application, you will need to follow these general steps:
+
+1. Register an application
+2. Define the authentication flow
+3. Configure your application in your web application
+  
+Regarding the Web app in this scenario we will use Azure AD as Open Id Provider.
